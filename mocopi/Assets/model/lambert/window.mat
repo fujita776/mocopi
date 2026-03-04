@@ -118,7 +118,7 @@ Material:
     - _Mode: 3
     - _OPACITY: 1
     - _OcclusionStrength: 1
-    - _Opacity: 0.65
+    - _Opacity: 0.7
     - _Parallax: 0.02
     - _QueueControl: 0
     - _QueueOffset: 0
