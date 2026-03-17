@@ -6279,6 +6279,18 @@ PrefabInstance:
       propertyPath: m_TagString
       value: DestroyFood
       objectReference: {fileID: 0}
+    - target: {fileID: 2029525369266837727, guid: bbd91d05b0f9eee4cab21f575cf47971, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2029525369266837727, guid: bbd91d05b0f9eee4cab21f575cf47971, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2029525369266837727, guid: bbd91d05b0f9eee4cab21f575cf47971, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bbd91d05b0f9eee4cab21f575cf47971, type: 3}
 --- !u!1 &1815443382
