@@ -25,7 +25,7 @@ public class PullOutDonutOrVegetable : MonoBehaviour
     [Header("投げる時の効果音")]
     [SerializeField] private AudioClip throwClip;
 
-    [Header("音を鳴らすAudioSourse")]
+    [Header("音を鳴らすAudioSource")]
     [SerializeField] private AudioSource audioSource;
 
     [Header("かごに入らない場合の消滅設定")]

@@ -60,7 +60,7 @@ public class TowerPieceSpawner : MonoBehaviour
     {
         if(sprite == null)
         {
-            Debug.LogError($"TowerPieseSpawnerのSpriteがnullです");
+            Debug.LogError($"TowerPieceSpawnerのSpriteがnullです");
             return null;
         }
 

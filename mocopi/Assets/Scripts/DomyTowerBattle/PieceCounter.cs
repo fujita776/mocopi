@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PieceCounter : MonoBehaviour
 {
-    [Header("参照するTowerPiceSpawner")]
+    [Header("参照するTowerPieceSpawner")]
     [SerializeField] private TowerPieceSpawner spawner;
 
     //  現在のピース数

@@ -49,7 +49,7 @@ public class TimeCountUI : MonoBehaviour
         }
         if (audioSource == null)
         {
-            Debug.LogError("TimeCountUIスクリプトに、audioSourceがアタッチされていません。。", this);
+            Debug.LogError("TimeCountUIスクリプトに、audioSourceがアタッチされていません。", this);
             enabled = false;
             return;
         }

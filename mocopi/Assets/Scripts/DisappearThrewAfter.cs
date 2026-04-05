@@ -32,7 +32,7 @@ public class DisappearThrewAfter : MonoBehaviour
         //  lifeTimeの時間だけ待機する(かごに入った場合でも停止される)
         yield return new WaitForSeconds(lifeTime);
 
-        //  disappearClipがされている場合は、その効果音を再生
+        //  disappearClipが設定されている場合は、その効果音を再生
         if(disappearClip != null )
         {
             audioSource.PlayOneShot(disappearClip);

@@ -22,7 +22,7 @@ public class SceneChange : MonoBehaviour
     [Header("M5StampC3入力を使うかどうか")]
     [SerializeField] private bool useM5Input = true;
 
-    [Header("M55StampC3のシリアル設定")]
+    [Header("M5StampC3のシリアル設定")]
     [SerializeField] private string portName = "COM3";
     [SerializeField] private int baudRate = 115200;
 
@@ -56,7 +56,7 @@ public class SceneChange : MonoBehaviour
         //  preLoadClipに音が入っている場合
         if (preLoadClip != null)
         {
-            //  udioSourceがなければ追加する
+            //  AudioSourceがなければ追加する
             audioSource = gameObject.GetComponent<AudioSource>();
             if(audioSource ==  null )
             {
@@ -162,7 +162,7 @@ public class SceneChange : MonoBehaviour
         {
             sp = new SerialPort(portName, baudRate)
             {
-                NewLine = "¥n",
+                NewLine = "\n",
                 ReadTimeout = 200,
                 DtrEnable = true,
                 RtsEnable = true

@@ -22,7 +22,7 @@ public class M5StampC3ButtonReceiver : MonoBehaviour
         //  シリアルポートの初期化
         serialPort = new SerialPort(portName, baudRate)
         {
-            NewLine = "¥n",  //  改行コードの設定
+            NewLine = "\n",  //  改行コードの設定
             ReadTimeout = 200,  //  タイムアウト時間（ミリ秒）
             DtrEnable = true,  //  データ端末準備信号を有効にする
             RtsEnable = true  //  送信要求信号を有効にする
