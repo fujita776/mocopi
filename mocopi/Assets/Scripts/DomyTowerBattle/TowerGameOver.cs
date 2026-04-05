@@ -1,36 +1,36 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class TowerGameOver : MonoBehaviour
 {
-    [Header("ƒQ[ƒ€I—¹‚É•\¦‚·‚éƒLƒƒƒ“ƒoƒX")]
+    [Header("ã‚²ãƒ¼ãƒ çµ‚äº†æ™‚ã«è¡¨ç¤ºã™ã‚‹ã‚­ãƒ£ãƒ³ãƒã‚¹")]
     [SerializeField] private GameObject gameOverCanvas;
 
-    [Header("ƒQ[ƒ€I—¹‚É–³Œø‰»‚·‚éƒXƒNƒŠƒvƒg")]
+    [Header("ã‚²ãƒ¼ãƒ çµ‚äº†æ™‚ã«ç„¡åŠ¹åŒ–ã™ã‚‹ã‚¹ã‚¯ãƒªãƒ—ãƒˆ")]
     [SerializeField] private MonoBehaviour[] disableOnGameOver;
 
-    [Header("ŠÔ‚ğ~‚ß‚é‚©‚Ç‚¤‚©")]
+    [Header("æ™‚é–“ã‚’æ­¢ã‚ã‚‹ã‹ã©ã†ã‹")]
     [SerializeField] private bool stopTimeOnGameOver = true;
 
     private void Start()
     {
-        //  ƒQ[ƒ€ƒI[ƒo[‚ÌƒLƒƒƒ“ƒoƒX‚ÍÅ‰‚Í”ñ•\¦‚É‚·‚é
+        //  ã‚²ãƒ¼ãƒ ã‚ªãƒ¼ãƒãƒ¼ã®ã‚­ãƒ£ãƒ³ãƒã‚¹ã¯æœ€åˆã¯éè¡¨ç¤ºã«ã™ã‚‹
         if (gameOverCanvas != null)
         {
             gameOverCanvas.SetActive(false);
         }
     }
 
-    //  ƒQ[ƒ€ƒI[ƒo[ˆ—
+    //  ã‚²ãƒ¼ãƒ ã‚ªãƒ¼ãƒãƒ¼å‡¦ç†
     public void GameOver()
     {
-        //  ƒQ[ƒ€ƒI[ƒo[‚ÌƒLƒƒƒ“ƒoƒX‚ğ•\¦
+        //  ã‚²ãƒ¼ãƒ ã‚ªãƒ¼ãƒãƒ¼ã®ã‚­ãƒ£ãƒ³ãƒã‚¹ã‚’è¡¨ç¤º
         if (gameOverCanvas != null)
         {
             gameOverCanvas.SetActive(true);
         }
-        //  w’è‚³‚ê‚½ƒXƒNƒŠƒvƒg‚ğ–³Œø‰»‚·‚é
+        //  æŒ‡å®šã•ã‚ŒãŸã‚¹ã‚¯ãƒªãƒ—ãƒˆã‚’ç„¡åŠ¹åŒ–ã™ã‚‹
         foreach (var script in disableOnGameOver)
         {
             if (script != null)
@@ -38,7 +38,7 @@ public class TowerGameOver : MonoBehaviour
                 script.enabled = false;
             }
         }
-        //  ŠÔ‚ğ~‚ß‚é
+        //  æ™‚é–“ã‚’æ­¢ã‚ã‚‹
         if (stopTimeOnGameOver)
         {
             Time.timeScale = 0f;

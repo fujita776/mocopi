@@ -1,46 +1,46 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//  “Š‚°‚½ŒãA‚©‚²‚É“ü‚ç‚¸ˆê’èŠÔŒo‰ß‚µ‚½‚É©“®Á–Å•Œø‰Ê‰¹Ä¶‚ğs‚¤ƒRƒ“ƒ|[ƒlƒ“ƒg
+//  æŠ•ã’ãŸå¾Œã€ã‹ã”ã«å…¥ã‚‰ãšä¸€å®šæ™‚é–“çµŒéã—ãŸæ™‚ã«è‡ªå‹•æ¶ˆæ»…ï¼†åŠ¹æœéŸ³å†ç”Ÿã‚’è¡Œã†ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆ
 public class DisappearThrewAfter : MonoBehaviour
 {
-    //  ‚©‚²‚É“ü‚ç‚È‚¢ê‡‚ÌÁ–Å‚·‚é‚Ü‚Å‚ÌŠÔ
+    //  ã‹ã”ã«å…¥ã‚‰ãªã„å ´åˆã®æ¶ˆæ»…ã™ã‚‹ã¾ã§ã®æ™‚é–“
     public float lifeTime = 5f;
 
-    //  Á–Å‚µ‚½‚É–Â‚ç‚·‰¹
+    //  æ¶ˆæ»…ã—ãŸæ™‚ã«é³´ã‚‰ã™éŸ³
     public AudioClip disappearClip;
 
-    //  Œø‰Ê‰¹Ä¶—p‚ÌAudioSource
+    //  åŠ¹æœéŸ³å†ç”Ÿç”¨ã®AudioSource
     private AudioSource audioSource;
 
     private void Awake()
     {
-        //  AudioSourceƒRƒ“ƒ|[ƒlƒ“ƒg‚ğ’Ç‰Á‚·‚éAƒ‹[ƒvÄ¶‚ÍƒIƒt
+        //  AudioSourceã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚’è¿½åŠ ã™ã‚‹ã€ãƒ«ãƒ¼ãƒ—å†ç”Ÿã¯ã‚ªãƒ•
         audioSource = gameObject.AddComponent<AudioSource>();
         audioSource.loop = false;
     }
 
     private void Start()
     {
-        //  ƒRƒ‹[ƒ`ƒ“‚ğŠJn‚·‚é
+        //  ã‚³ãƒ«ãƒ¼ãƒãƒ³ã‚’é–‹å§‹ã™ã‚‹
         StartCoroutine(ExpireAfterDelay());
     }
 
     private IEnumerator ExpireAfterDelay()
     {
-        //  lifeTime‚ÌŠÔ‚¾‚¯‘Ò‹@‚·‚é(‚©‚²‚É“ü‚Á‚½ê‡‚Å‚à’â~‚³‚ê‚é)
+        //  lifeTimeã®æ™‚é–“ã ã‘å¾…æ©Ÿã™ã‚‹(ã‹ã”ã«å…¥ã£ãŸå ´åˆã§ã‚‚åœæ­¢ã•ã‚Œã‚‹)
         yield return new WaitForSeconds(lifeTime);
 
-        //  disappearClip‚ª‚³‚ê‚Ä‚¢‚éê‡‚ÍA‚»‚ÌŒø‰Ê‰¹‚ğÄ¶
+        //  disappearClipãŒã•ã‚Œã¦ã„ã‚‹å ´åˆã¯ã€ãã®åŠ¹æœéŸ³ã‚’å†ç”Ÿ
         if(disappearClip != null )
         {
             audioSource.PlayOneShot(disappearClip);
-            //  Œø‰Ê‰¹‚Ì’·‚³•ª‚¾‚¯‘Ò‹@‚·‚é
+            //  åŠ¹æœéŸ³ã®é•·ã•åˆ†ã ã‘å¾…æ©Ÿã™ã‚‹
             yield return new WaitForSeconds(disappearClip.length);
         }
 
-        //  ƒIƒuƒWƒFƒNƒg‚ğ”jŠü
+        //  ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ç ´æ£„
         Destroy(gameObject);
     }
 }

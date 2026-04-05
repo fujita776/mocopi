@@ -1,13 +1,13 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class HideCanvas : MonoBehaviour
 {
-    [Header("”ñ•\¦‚É‚µ‚½‚¢Canvas")]
+    [Header("éè¡¨ç¤ºã«ã—ãŸã„Canvas")]
     [SerializeField] private Canvas hideCanvas;
 
-    [Header("•\¦‚ğØ‚è‘Ö‚¦‚éˆ×‚ÌƒL[")]
+    [Header("è¡¨ç¤ºã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹ç‚ºã®ã‚­ãƒ¼")]
     [SerializeField] private KeyCode key = KeyCode.U;
 
     private bool useKey = false; 
@@ -19,7 +19,7 @@ public class HideCanvas : MonoBehaviour
 
         if(!Input.GetKeyDown(key)) return;
 
-        hideCanvas.gameObject.SetActive(false);  //  Canvas‚ğ‰B‚·
+        hideCanvas.gameObject.SetActive(false);  //  Canvasã‚’éš ã™
 
         useKey = true;
     }

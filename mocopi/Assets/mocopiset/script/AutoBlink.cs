@@ -1,79 +1,79 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class AutoBlink : MonoBehaviour
 {
-    //‚Æ‚¶–Ú‚ÌBlendShapes‚ª“o˜^‚³‚ê‚Ä‚¢‚éSkinnedMeshRenderer‚ğæ“¾
-    //‚Ü‚Ù‚ÎŒN‚Ìê‡‚ÍŠç‚ÌƒIƒuƒWƒFƒNƒg‚ª‚Á‚Ä‚¢‚é
+    //ã¨ã˜ç›®ã®BlendShapesãŒç™»éŒ²ã•ã‚Œã¦ã„ã‚‹SkinnedMeshRendererã‚’å–å¾—
+    //ã¾ã»ã°å›ã®å ´åˆã¯é¡”ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãŒæŒã£ã¦ã„ã‚‹
     public SkinnedMeshRenderer face_SkinnedMeshRenderer;
 
-    //‚Æ‚¶–Ú‚Ì—v‘f”
+    //ã¨ã˜ç›®ã®è¦ç´ æ•°
     public int eyeClose_KeyNumber = 5;
 
-    //SetBlendShapeWeight‚Ég—p‚·‚é”’l
-    //0‚Å‚Ü‚Ô‚½‚ªŠ®‘S‚ÉŠJ‚­A100‚Å‚Ü‚Ô‚½‚ªŠ®‘S‚É•Â‚¶‚é
+    //SetBlendShapeWeightã«ä½¿ç”¨ã™ã‚‹æ•°å€¤
+    //0ã§ã¾ã¶ãŸãŒå®Œå…¨ã«é–‹ãã€100ã§ã¾ã¶ãŸãŒå®Œå…¨ã«é–‰ã˜ã‚‹
     private float weight = 0.0f;
 
-    //ŠÔ‚ğŒv‘ª‚·‚é‚½‚ß‚Ì•Ï”
+    //æ™‚é–“ã‚’è¨ˆæ¸¬ã™ã‚‹ãŸã‚ã®å¤‰æ•°
     public float countTime = 0.0f;
-    //‚Ü‚Î‚½‚«‚Ì”­“®ƒ^ƒCƒ~ƒ“ƒO‚Ì•Ï”
+    //ã¾ã°ãŸãã®ç™ºå‹•ã‚¿ã‚¤ãƒŸãƒ³ã‚°ã®å¤‰æ•°
     public float blinkTriggerTime = 5.0f;
 
-    [Header("‚Ü‚Î‚½‚«‚Ì”­“®ƒ^ƒCƒ~ƒ“ƒO‚ÌÅ¬‚ÌŠÔ")]
+    [Header("ã¾ã°ãŸãã®ç™ºå‹•ã‚¿ã‚¤ãƒŸãƒ³ã‚°ã®æœ€å°ã®æ™‚é–“")]
     public float blinkTriggerTimeMin = 3.0f;
 
-    [Header("‚Ü‚Î‚½‚«‚Ì”­“®ƒ^ƒCƒ~ƒ“ƒO‚ÌÅ‘å‚ÌŠÔ")]
+    [Header("ã¾ã°ãŸãã®ç™ºå‹•ã‚¿ã‚¤ãƒŸãƒ³ã‚°ã®æœ€å¤§ã®æ™‚é–“")]
     public float blinkTriggerTimeMax = 7.0f;
 
     void FixedUpdate()
     {
-        //FixedUpdate‚Í‰Šúİ’è‚Ì‚Ü‚Ü‚È‚ç
+        //FixedUpdateã¯åˆæœŸè¨­å®šã®ã¾ã¾ãªã‚‰
         CheckCountTime();
     }
 
     void CheckCountTime()
     {
-        //ŠÔ‚ğŒv‘ª
+        //æ™‚é–“ã‚’è¨ˆæ¸¬
         countTime += Time.deltaTime;
-        //ŠÔ‚ª‚Ü‚Î‚½‚«‚Ì”­“®ƒ^ƒCƒ~ƒ“ƒO‚ğ’´‚¦‚½‚ç
+        //æ™‚é–“ãŒã¾ã°ãŸãã®ç™ºå‹•ã‚¿ã‚¤ãƒŸãƒ³ã‚°ã‚’è¶…ãˆãŸã‚‰
         if (countTime > blinkTriggerTime)
         {
-            //Œv‘ªŠÔ‚ğƒŠƒZƒbƒg
+            //è¨ˆæ¸¬æ™‚é–“ã‚’ãƒªã‚»ãƒƒãƒˆ
             countTime = 0.0f;
-            //‚Ü‚Î‚½‚«‚Ì”­“®ƒ^ƒCƒ~ƒ“ƒO‚Ì•Ï”‚É
-            //blinkTriggerTimeMin‚©‚çblinkTriggerTimeMax‚ÌŠÔ‚Åƒ‰ƒ“ƒ_ƒ€‚È”’l‚ğæ“¾
+            //ã¾ã°ãŸãã®ç™ºå‹•ã‚¿ã‚¤ãƒŸãƒ³ã‚°ã®å¤‰æ•°ã«
+            //blinkTriggerTimeMinã‹ã‚‰blinkTriggerTimeMaxã®é–“ã§ãƒ©ãƒ³ãƒ€ãƒ ãªæ•°å€¤ã‚’å–å¾—
             blinkTriggerTime = UnityEngine.Random.Range(blinkTriggerTimeMin, blinkTriggerTimeMax);
 
-            //–Ú‚ğ•Â‚¶‚éˆ—ŠJn
+            //ç›®ã‚’é–‰ã˜ã‚‹å‡¦ç†é–‹å§‹
             StartCoroutine("CloseEye");
         }
     }
 
     IEnumerator CloseEye()
     {
-        //•Â‚¶‚éÛ‚Ìâ–­‚È’†–Ú‰ÁŒ¸
+        //é–‰ã˜ã‚‹éš›ã®çµ¶å¦™ãªä¸­ç›®åŠ æ¸›
         weight = 80.0f;
-        //’†–Ú‚É‚µ‚Ä‚¿‚å‚Á‚Æ‚¾‚¯Ÿ‚Ìˆ—‚ğ‘Ò‚Â
+        //ä¸­ç›®ã«ã—ã¦ã¡ã‚‡ã£ã¨ã ã‘æ¬¡ã®å‡¦ç†ã‚’å¾…ã¤
         face_SkinnedMeshRenderer.SetBlendShapeWeight(eyeClose_KeyNumber, weight);
         //yield return new WaitForSeconds(0.05f);
-        //‚Ü‚Ô‚½‚ğŠ®‘S‚É•Â‚¶‚Ä‚¿‚å‚Á‚Æ‚¾‚¯Ÿ‚Ìˆ—‚ğ‘Ò‚Â
+        //ã¾ã¶ãŸã‚’å®Œå…¨ã«é–‰ã˜ã¦ã¡ã‚‡ã£ã¨ã ã‘æ¬¡ã®å‡¦ç†ã‚’å¾…ã¤
         face_SkinnedMeshRenderer.SetBlendShapeWeight(eyeClose_KeyNumber, 100.0f);
         yield return new WaitForSeconds(0.1f);
 
-        //–Ú‚ğŠJ‚­ˆ—ŠJn
+        //ç›®ã‚’é–‹ãå‡¦ç†é–‹å§‹
         StartCoroutine("OpenEye");
     }
 
     IEnumerator OpenEye()
     {
-        //ŠJ‚­Û‚Ìâ–­‚È’†–Ú‰ÁŒ¸
+        //é–‹ãéš›ã®çµ¶å¦™ãªä¸­ç›®åŠ æ¸›
         weight = 60.0f;
-        //’†–Ú‚É‚µ‚Ä‚¿‚å‚Á‚Æ‚¾‚¯Ÿ‚Ìˆ—‚ğ‘Ò‚Â
+        //ä¸­ç›®ã«ã—ã¦ã¡ã‚‡ã£ã¨ã ã‘æ¬¡ã®å‡¦ç†ã‚’å¾…ã¤
         face_SkinnedMeshRenderer.SetBlendShapeWeight(eyeClose_KeyNumber, weight);
         yield return new WaitForSeconds(0.0001f);
-        //‚Ü‚Ô‚½‚ğŠ®‘S‚ÉŠJ‚­
+        //ã¾ã¶ãŸã‚’å®Œå…¨ã«é–‹ã
         face_SkinnedMeshRenderer.SetBlendShapeWeight(eyeClose_KeyNumber, 0.0f);
     }
 

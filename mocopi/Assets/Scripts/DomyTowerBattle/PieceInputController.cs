@@ -1,34 +1,34 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PieceInputController : MonoBehaviour
 {
-    [Header("‘€ì‘ÎÛ‚ÌDroppablePiece")]
-    [SerializeField] private DroppablePiece current;  //  TowerGameManager‚©‚ç“s“xƒZƒbƒg‚·‚é
+    [Header("æ“ä½œå¯¾è±¡ã®DroppablePiece")]
+    [SerializeField] private DroppablePiece current;  //  TowerGameManagerã‹ã‚‰éƒ½åº¦ã‚»ãƒƒãƒˆã™ã‚‹
 
-    [Header("“ü—Íİ’è")]
+    [Header("å…¥åŠ›è¨­å®š")]
     [SerializeField] private float inputDeadzone = 0.15f;
 
-    [Header("ŠŠ‚ç‚©‚É‚·‚éˆÚ“®İ’è")]
-    [SerializeField] private float moveSpeed = 3f;      //  ‰Ÿ‚µ‹ï‡‚É‰‚¶‚½ˆÚ“®‘¬“x
+    [Header("æ»‘ã‚‰ã‹ã«ã™ã‚‹ç§»å‹•è¨­å®š")]
+    [SerializeField] private float moveSpeed = 3f;      //  æŠ¼ã—å…·åˆã«å¿œã˜ãŸç§»å‹•é€Ÿåº¦
     [SerializeField] private float smoothTime = 0.06f;
 
-    [Header("¶‰EˆÚ“®‚Ì§ŒÀ")]
+    [Header("å·¦å³ç§»å‹•ã®åˆ¶é™")]
     [SerializeField] private bool useLimitX = true;
     [SerializeField] private float minX = -5f;
     [SerializeField] private float maxX = 5f;
 
-    private bool canDrop = true;  //  ˜AË‘Îô‚Ìƒtƒ‰ƒO
+    private bool canDrop = true;  //  é€£å°„å¯¾ç­–ã®ãƒ•ãƒ©ã‚°
 
-    // ¡A‘€ì‚µ‚Ä‚¢‚éƒs[ƒX‚ª‚ ‚é‚©
+    // ä»Šã€æ“ä½œã—ã¦ã„ã‚‹ãƒ”ãƒ¼ã‚¹ãŒã‚ã‚‹ã‹
     public bool HasControlPiece => current != null && !current.HasDropped;
 
     private TowerGameControls controls;
     private float moveAxisX;
 
-    //  ŠŠ‚ç‚ÉˆÚ“®‚³‚¹‚é‚½‚ß‚Ì•Ï”
+    //  æ»‘ã‚‰ã«ç§»å‹•ã•ã›ã‚‹ãŸã‚ã®å¤‰æ•°
     private Vector3 targetPosition;
     private Vector3 smoothVelocity;
     private bool isHoldingMove;
@@ -37,12 +37,12 @@ public class PieceInputController : MonoBehaviour
     {
         controls = new TowerGameControls();
 
-        //  “ü—Í’l‚ğó‚¯æ‚é
+        //  å…¥åŠ›å€¤ã‚’å—ã‘å–ã‚‹
         controls.GamePlay.Move.performed += ctx =>
         {
             moveAxisX = ctx.ReadValue<float>();
 
-            //  ƒfƒbƒhƒ][ƒ““à‚Í–³‹
+            //  ãƒ‡ãƒƒãƒ‰ã‚¾ãƒ¼ãƒ³å†…ã¯ç„¡è¦–
             if (Mathf.Abs(moveAxisX) <= inputDeadzone)
             {
                 isHoldingMove = false;
@@ -58,11 +58,11 @@ public class PieceInputController : MonoBehaviour
             isHoldingMove = false;
         };
 
-        //  —‰º“ü—Í
+        //  è½ä¸‹å…¥åŠ›
         controls.GamePlay.Drop.performed += _ =>
         {
             if (current == null || current.HasDropped) return;
-            if (!canDrop) return; // ˜AË‘Îô
+            if (!canDrop) return; // é€£å°„å¯¾ç­–
 
             canDrop = false;
             current.Drop();
@@ -79,7 +79,7 @@ public class PieceInputController : MonoBehaviour
 
     private void OnDestroy()
     {
-        //  InputActionAsset‚ğ”jŠü‚µ‚ÄƒŠ[ƒN‚ğ–h‚®
+        //  InputActionAssetã‚’ç ´æ£„ã—ã¦ãƒªãƒ¼ã‚¯ã‚’é˜²ã
         controls?.Dispose();
     }
 
@@ -92,13 +92,13 @@ public class PieceInputController : MonoBehaviour
             targetPosition += Vector3.right * (moveAxisX * moveSpeed * Time.deltaTime);
         }
 
-        //  X²‚ÌˆÚ“®§ŒÀ
+        //  Xè»¸ã®ç§»å‹•åˆ¶é™
         if (useLimitX)
         {
             targetPosition.x = Mathf.Clamp(targetPosition.x, minX, maxX);
         }
 
-        //  Œ»İˆÊ’u‚ğƒ^[ƒQƒbƒg‚Ö’Ç]‚³‚¹‚é
+        //  ç¾åœ¨ä½ç½®ã‚’ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã¸è¿½å¾“ã•ã›ã‚‹
         current.transform.position = Vector3.SmoothDamp(
             current.transform.position,
             targetPosition,
@@ -107,7 +107,7 @@ public class PieceInputController : MonoBehaviour
         );
     }
 
-    //  ŠO•”‚ÌGameManager‚È‚Ç‚©‚çŒ»İ‚Ì‘€ì‘ÎÛ‚ğ·‚µ‘Ö‚¦‚é
+    //  å¤–éƒ¨ã®GameManagerãªã©ã‹ã‚‰ç¾åœ¨ã®æ“ä½œå¯¾è±¡ã‚’å·®ã—æ›¿ãˆã‚‹
     public void SetCurrent(DroppablePiece piece)
     {
         current = piece;
@@ -117,7 +117,7 @@ public class PieceInputController : MonoBehaviour
 
         if (current != null)
         {
-            //  ƒ^[ƒQƒbƒgˆÊ’u‚ğŒ»İˆÊ’u‚É“¯Šú‚µ‚ÄuŠÔˆÚ“®‚ğ–h‚®
+            //  ã‚¿ãƒ¼ã‚²ãƒƒãƒˆä½ç½®ã‚’ç¾åœ¨ä½ç½®ã«åŒæœŸã—ã¦ç¬é–“ç§»å‹•ã‚’é˜²ã
             targetPosition = current.transform.position;
         }
         else

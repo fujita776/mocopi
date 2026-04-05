@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using uLipSync;
@@ -10,6 +10,6 @@ public class LipSyncController : MonoBehaviour
 
     void Start()
     {
-        audioSource.Play();  //  ƒŠƒbƒvƒVƒ“ƒN‚ª˜A“®‚·‚é
+        audioSource.Play();  //  ãƒªãƒƒãƒ—ã‚·ãƒ³ã‚¯ãŒé€£å‹•ã™ã‚‹
     }
 }

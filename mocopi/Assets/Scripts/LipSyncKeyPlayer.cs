@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using uLipSync;
@@ -13,7 +13,7 @@ public class LipSyncKeyPlayer : MonoBehaviour
     {
         if(Input.GetKeyDown(keyCode))
         {
-            //  �Đ����̏ꍇ�͎~�߂�
+            //  再生中の場合は止める
             if(audioSource.isPlaying)
             {
                 audioSource.Stop();

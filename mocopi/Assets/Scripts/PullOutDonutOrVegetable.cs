@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,28 +7,28 @@ public class PullOutDonutOrVegetable : MonoBehaviour
     [SerializeField] private GameObject donut;
     [SerializeField] private GameObject vegetable;
 
-    [Header("ƒh[ƒiƒbƒc‚©–ìØ‚ªŒ»‚ê‚éˆÊ’u")]
+    [Header("ãƒ‰ãƒ¼ãƒŠãƒƒãƒ„ã‹é‡èœãŒç¾ã‚Œã‚‹ä½ç½®")]
     [SerializeField] private Transform spawnPoint;
 
-    [Header("“Š‚°æ‚Ìƒ^[ƒQƒbƒg")]
+    [Header("æŠ•ã’å…ˆã®ã‚¿ãƒ¼ã‚²ãƒƒãƒˆ")]
     [SerializeField] private Transform throwTargetJ;
     [SerializeField] private Transform throwTargetK;
     [SerializeField] private Transform throwTargetL;
 
-    [Header("ƒvƒŒƒCƒ„[‚ÌèŒ³•ÛƒRƒ“ƒ|[ƒlƒ“ƒg")]
+    [Header("ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æ‰‹å…ƒä¿æŒã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆ")]
     [SerializeField] private MonoBehaviour domyHandHolder;
 
-    [Header("“Š‚°‚éİ’è")]
-    [Tooltip("“Š‚°‚é—Í")]
+    [Header("æŠ•ã’ã‚‹è¨­å®š")]
+    [Tooltip("æŠ•ã’ã‚‹åŠ›")]
     [SerializeField] private float throwForce = 10f;
 
-    [Header("“Š‚°‚é‚ÌŒø‰Ê‰¹")]
+    [Header("æŠ•ã’ã‚‹æ™‚ã®åŠ¹æœéŸ³")]
     [SerializeField] private AudioClip throwClip;
 
-    [Header("‰¹‚ğ–Â‚ç‚·AudioSourse")]
+    [Header("éŸ³ã‚’é³´ã‚‰ã™AudioSourse")]
     [SerializeField] private AudioSource audioSource;
 
-    [Header("‚©‚²‚É“ü‚ç‚È‚¢ê‡‚ÌÁ–Åİ’è")]
+    [Header("ã‹ã”ã«å…¥ã‚‰ãªã„å ´åˆã®æ¶ˆæ»…è¨­å®š")]
     [SerializeField] private float lifeTime = 5f;
 
     private IHandHolder currentHandHolder;
@@ -40,30 +40,30 @@ public class PullOutDonutOrVegetable : MonoBehaviour
             currentHandHolder = domyHandHolder as IHandHolder;
             if (currentHandHolder == null)
             {
-                Debug.LogWarning("domyHandHolder ‚É IHandHolder ‚ğÀ‘•‚µ‚½ƒRƒ“ƒ|[ƒlƒ“ƒg‚ğƒAƒTƒCƒ“‚µ‚Ä‚­‚¾‚³‚¢B");
+                Debug.LogWarning("domyHandHolder ã« IHandHolder ã‚’å®Ÿè£…ã—ãŸã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚’ã‚¢ã‚µã‚¤ãƒ³ã—ã¦ãã ã•ã„ã€‚");
                 currentHandHolder = new NullHandHolder();
             }
         }
         else
         {
             currentHandHolder = new NullHandHolder();
-            Debug.LogWarning("—LŒø‚È IHandHolder ‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ‚Å‚µ‚½BNullHandHolder ‚ğg—p‚µ‚Ü‚·B");
+            Debug.LogWarning("æœ‰åŠ¹ãª IHandHolder ãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã§ã—ãŸã€‚NullHandHolder ã‚’ä½¿ç”¨ã—ã¾ã™ã€‚");
         }
 
-        //  AudioSource‚ªİ’è‚³‚ê‚Ä‚¢‚È‚¯‚ê‚Î©“®æ“¾‚Ü‚½‚Íì¬‚·‚é
+        //  AudioSourceãŒè¨­å®šã•ã‚Œã¦ã„ãªã‘ã‚Œã°è‡ªå‹•å–å¾—ã¾ãŸã¯ä½œæˆã™ã‚‹
         if (audioSource == null)
         {
             audioSource = gameObject.GetComponent<AudioSource>();
             if (audioSource == null)
                 audioSource = gameObject.AddComponent<AudioSource>();
         }
-        //  ƒ‹[ƒv‚µ‚È‚¢
+        //  ãƒ«ãƒ¼ãƒ—ã—ãªã„
         audioSource.loop = false;
     }
 
     private void Update()
     {
-        // ‡@ èŒ³‚ÉƒAƒCƒeƒ€‚ª‚È‚¢ê‡‚ÍAO ‚Ü‚½‚Í P ƒL[‚Å¶¬‚µ‚ÄèŒ³‚ÉƒAƒ^ƒbƒ`
+        // â‘  æ‰‹å…ƒã«ã‚¢ã‚¤ãƒ†ãƒ ãŒãªã„å ´åˆã¯ã€O ã¾ãŸã¯ P ã‚­ãƒ¼ã§ç”Ÿæˆã—ã¦æ‰‹å…ƒã«ã‚¢ã‚¿ãƒƒãƒ
         if (currentHandHolder.HeldItem == null)
         {
             if (Input.GetKeyDown(KeyCode.O))
@@ -80,7 +80,7 @@ public class PullOutDonutOrVegetable : MonoBehaviour
             }
         }
 
-        // ‡A ‚·‚Å‚ÉèŒ³‚ÉƒAƒCƒeƒ€‚ª‚ ‚éê‡AJEKEL ƒL[‚Å“Š‚°‚éˆ—‚ğs‚¤
+        // â‘¡ ã™ã§ã«æ‰‹å…ƒã«ã‚¢ã‚¤ãƒ†ãƒ ãŒã‚ã‚‹å ´åˆã€Jãƒ»Kãƒ»L ã‚­ãƒ¼ã§æŠ•ã’ã‚‹å‡¦ç†ã‚’è¡Œã†
         if (currentHandHolder.HeldItem != null)
         {
             if (Input.GetKeyDown(KeyCode.J) && throwTargetJ != null)
@@ -98,7 +98,7 @@ public class PullOutDonutOrVegetable : MonoBehaviour
     
         }
 
-        // ‡B I ƒL[‚Åè•ú‚·i“Š‚°‚éˆ—‚Æ‚Í•Ê‚É’Pƒ‚Éƒfƒ^ƒbƒ`j
+        // â‘¢ I ã‚­ãƒ¼ã§æ‰‹æ”¾ã™ï¼ˆæŠ•ã’ã‚‹å‡¦ç†ã¨ã¯åˆ¥ã«å˜ç´”ã«ãƒ‡ã‚¿ãƒƒãƒï¼‰
         if (Input.GetKeyDown(KeyCode.I) && currentHandHolder.HeldItem != null)
         {
             currentHandHolder.DetachItem();
@@ -106,13 +106,13 @@ public class PullOutDonutOrVegetable : MonoBehaviour
     }
 
     /// <summary>
-    /// w’è‚³‚ê‚½ƒvƒŒƒnƒu‚ğ¶¬‚µA‚»‚ÌƒIƒuƒWƒFƒNƒg‚ğ•Ô‚·
+    /// æŒ‡å®šã•ã‚ŒãŸãƒ—ãƒ¬ãƒãƒ–ã‚’ç”Ÿæˆã—ã€ãã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’è¿”ã™
     /// </summary>
     private GameObject SpawnObject(GameObject prefab)
     {
         if (prefab == null)
         {
-            Debug.LogWarning("¶¬‚·‚éƒvƒŒƒnƒu‚ªİ’è‚³‚ê‚Ä‚¢‚Ü‚¹‚ñB");
+            Debug.LogWarning("ç”Ÿæˆã™ã‚‹ãƒ—ãƒ¬ãƒãƒ–ãŒè¨­å®šã•ã‚Œã¦ã„ã¾ã›ã‚“ã€‚");
             return null;
         }
 
@@ -121,22 +121,22 @@ public class PullOutDonutOrVegetable : MonoBehaviour
         return Instantiate(prefab, position, rotation);
     }
 
-    //  “Š‚°‚é‚ÌŒø‰Ê‰¹‚ÌÄ¶
+    //  æŠ•ã’ã‚‹æ™‚ã®åŠ¹æœéŸ³ã®å†ç”Ÿ
     private void PlayThrowSound()
     {
         if (throwClip != null && audioSource != null)
             audioSource.PlayOneShot(throwClip);
     }
     ///  <summary>
-    ///  “Š‚°‚ÄAŒø‰Ê‰¹‚ğ–Â‚ç‚µA©“®Á–ÅƒRƒ“ƒ|[ƒlƒ“ƒg‚ğ’Ç‰Á‚µ‚ÄAŒo‰ßŠÔŒã‚É”jŠü‚·‚é
+    ///  æŠ•ã’ã¦ã€åŠ¹æœéŸ³ã‚’é³´ã‚‰ã—ã€è‡ªå‹•æ¶ˆæ»…ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚’è¿½åŠ ã—ã¦ã€çµŒéæ™‚é–“å¾Œã«ç ´æ£„ã™ã‚‹
     ///  </summary>
     private void ThrowWithAutoDestroy(Transform target)
     {
         GameObject thrown = currentHandHolder.HeldItem;
-        currentHandHolder.ThrowItem(target, throwForce);  //  “Š‚°‚é
-        PlayThrowSound();  //  “Š‚°‚éŒø‰Ê‰¹
+        currentHandHolder.ThrowItem(target, throwForce);  //  æŠ•ã’ã‚‹
+        PlayThrowSound();  //  æŠ•ã’ã‚‹åŠ¹æœéŸ³
 
-        //  ©“®Á–Å‚ÌƒRƒ“ƒ|[ƒlƒ“ƒg‚ğ’Ç‰Á‚µ‚ÄAİ’è‚ğ“n‚·
+        //  è‡ªå‹•æ¶ˆæ»…ã®ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚’è¿½åŠ ã—ã¦ã€è¨­å®šã‚’æ¸¡ã™
         var disapperThrew = thrown.AddComponent<DisappearThrewAfter>();
         disapperThrew.lifeTime = lifeTime;
     }

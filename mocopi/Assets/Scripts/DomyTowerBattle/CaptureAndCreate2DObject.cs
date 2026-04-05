@@ -1,38 +1,38 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
 
 public class CaptureAndCreate2DObject : MonoBehaviour
 {
-    [Header("ƒLƒƒƒvƒ`ƒƒ‚Ìİ’è")]
-    [Header("ƒLƒƒƒvƒ`ƒƒê—p‚ÌƒJƒƒ‰")]
+    [Header("ã‚­ãƒ£ãƒ—ãƒãƒ£ã®è¨­å®š")]
+    [Header("ã‚­ãƒ£ãƒ—ãƒãƒ£å°‚ç”¨ã®ã‚«ãƒ¡ãƒ©")]
     [SerializeField] private Camera renderCamera;
 
-    [Header("ƒLƒƒƒvƒ`ƒƒ‚Ì‘ÎÛ‚Æ‚È‚éƒŒƒCƒ„[")]
+    [Header("ã‚­ãƒ£ãƒ—ãƒãƒ£ã®å¯¾è±¡ã¨ãªã‚‹ãƒ¬ã‚¤ãƒ¤ãƒ¼")]
     [SerializeField] private LayerMask targetLayer;
 
-    [Header("ƒLƒƒƒvƒ`ƒƒ‚µ‚½‚à‚Ì‚Ì‰ğ‘œ“x")]
+    [Header("ã‚­ãƒ£ãƒ—ãƒãƒ£ã—ãŸã‚‚ã®ã®è§£åƒåº¦")]
     [SerializeField] private int textureSize = 512;
 
 
-    [Header("ƒXƒvƒ‰ƒCƒg‰»‚Ìİ’è")]
-    [Header("ƒXƒvƒ‰ƒCƒg‚Ì•\¦ƒXƒP[ƒ‹‚Ì‚à‚Ì")]
+    [Header("ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆåŒ–ã®è¨­å®š")]
+    [Header("ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã®è¡¨ç¤ºã‚¹ã‚±ãƒ¼ãƒ«ã®ã‚‚ã®")]
     [SerializeField] private float pixelsPerUnit = 100f;
 
-    [Header("ƒXƒvƒ‰ƒCƒg‚ÌƒƒbƒVƒ…‚ÌŒ`ó(Tight‚Å—ÖŠs‚É‰ˆ‚¤Œ`)")]
+    [Header("ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã®ãƒ¡ãƒƒã‚·ãƒ¥ã®å½¢çŠ¶(Tightã§è¼ªéƒ­ã«æ²¿ã†å½¢)")]
     [SerializeField] private SpriteMeshType meshType = SpriteMeshType.Tight;
 
-    [Header("ƒXƒvƒ‰ƒCƒg‚Ìƒsƒ{ƒbƒgˆÊ’u")]
+    [Header("ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã®ãƒ”ãƒœãƒƒãƒˆä½ç½®")]
     [SerializeField] private Vector2 pivot = new Vector2(0.5f, 0.5f);
 
-    [Header("¶¬æ‚ÌTowerPieceSpawner")]
+    [Header("ç”Ÿæˆå…ˆã®TowerPieceSpawner")]
     [SerializeField] private TowerPieceSpawner spawner;
 
-    //  ¶¬‚µ‚½ƒs[ƒX‚ğ’Ê’m‚·‚éƒCƒxƒ“ƒg
+    //  ç”Ÿæˆã—ãŸãƒ”ãƒ¼ã‚¹ã‚’é€šçŸ¥ã™ã‚‹ã‚¤ãƒ™ãƒ³ãƒˆ
     public event Action<DroppablePiece> OnPieceCreated;
 
-    //  ƒLƒƒƒvƒ`ƒƒ‚µ‚ÄƒXƒvƒ‰ƒCƒg‰»‚µAƒs[ƒX‚ğ¶¬‚·‚éB
+    //  ã‚­ãƒ£ãƒ—ãƒãƒ£ã—ã¦ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆåŒ–ã—ã€ãƒ”ãƒ¼ã‚¹ã‚’ç”Ÿæˆã™ã‚‹ã€‚
     public void CaptureAndCreate()
     {
         StartCoroutine(DoCaptureAndCreate());
@@ -42,17 +42,17 @@ public class CaptureAndCreate2DObject : MonoBehaviour
     {
         if (renderCamera == null)
         {
-            Debug.LogError("ƒLƒƒƒvƒ`ƒƒê—p‚ÌƒJƒƒ‰‚ª–¢İ’è‚Å‚·B");
+            Debug.LogError("ã‚­ãƒ£ãƒ—ãƒãƒ£å°‚ç”¨ã®ã‚«ãƒ¡ãƒ©ãŒæœªè¨­å®šã§ã™ã€‚");
             yield break;
         }
         if (spawner == null)
         {
-            Debug.LogError("¶¬æ‚ÌTowerPieceSpawner‚ª–¢İ’è‚Å‚·B");
+            Debug.LogError("ç”Ÿæˆå…ˆã®TowerPieceSpawnerãŒæœªè¨­å®šã§ã™ã€‚");
             yield break;
         }
         if (textureSize <= 0)
         {
-            Debug.LogError("textureSize‚Í1ˆÈã‚É‚µ‚Ä‚­‚¾‚³‚¢B");
+            Debug.LogError("textureSizeã¯1ä»¥ä¸Šã«ã—ã¦ãã ã•ã„ã€‚");
             yield break;
         }
 
@@ -64,14 +64,14 @@ public class CaptureAndCreate2DObject : MonoBehaviour
             tex => capturedTex = tex
         );
 
-        //  ƒLƒƒƒvƒ`ƒƒ¸”s‚Ìƒ`ƒFƒbƒN
+        //  ã‚­ãƒ£ãƒ—ãƒãƒ£å¤±æ•—ã®ãƒã‚§ãƒƒã‚¯
         if (capturedTex == null)
         {
-            Debug.LogError("[CaptureAndCreate2DObject] ƒLƒƒƒvƒ`ƒƒ‚É¸”s‚µ‚Ü‚µ‚½B");
+            Debug.LogError("[CaptureAndCreate2DObject] ã‚­ãƒ£ãƒ—ãƒãƒ£ã«å¤±æ•—ã—ã¾ã—ãŸã€‚");
             yield break;
         }
 
-        //  Texture2D‚©‚çSprite‚É‚·‚é
+        //  Texture2Dã‹ã‚‰Spriteã«ã™ã‚‹
         var sprite = SpriteBuilder.CreateSprite(
             capturedTex,
             pixelsPerUnit,
@@ -81,20 +81,20 @@ public class CaptureAndCreate2DObject : MonoBehaviour
 
         if (sprite == null)
         {
-            Debug.LogError("[CaptureAndCreate2DObject] Sprite ‚Ì¶¬‚É¸”s‚µ‚Ü‚µ‚½B");
+            Debug.LogError("[CaptureAndCreate2DObject] Sprite ã®ç”Ÿæˆã«å¤±æ•—ã—ã¾ã—ãŸã€‚");
             
             yield break;
         }
 
-        //  ƒs[ƒX‚ğ¶¬‚·‚é
+        //  ãƒ”ãƒ¼ã‚¹ã‚’ç”Ÿæˆã™ã‚‹
         var pieceGO = spawner.Spawn(sprite);
         if (pieceGO == null)
         {
-            Debug.LogError("[CaptureAndCreate2DObject] ƒs[ƒX¶¬‚É¸”s‚µ‚Ü‚µ‚½B");
+            Debug.LogError("[CaptureAndCreate2DObject] ãƒ”ãƒ¼ã‚¹ç”Ÿæˆã«å¤±æ•—ã—ã¾ã—ãŸã€‚");
             yield break;
         }
 
-        //  ƒs[ƒX¶¬‚Ì’Ê’m
+        //  ãƒ”ãƒ¼ã‚¹ç”Ÿæˆã®é€šçŸ¥
         var droppablePiece = pieceGO.GetComponent<DroppablePiece>();
         if(droppablePiece != null)
         {

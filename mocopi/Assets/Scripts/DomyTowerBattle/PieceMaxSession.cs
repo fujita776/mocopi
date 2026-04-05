@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -7,12 +7,12 @@ public class PieceMaxSession : MonoBehaviour
 {
     [SerializeField] private PieceCounter pieceCounter;
 
-    //  ‚±‚ÌƒV[ƒ“‚É‘¶İ‚µ‚Ä‚¢‚é‚©
+    //  ã“ã®ã‚·ãƒ¼ãƒ³ã«å­˜åœ¨ã—ã¦ã„ã‚‹ã‹
     private static bool s_exists = false;
 
     private void Awake()
     {
-        //  ƒV[ƒ“‘¤‚É•¡”’u‚©‚ê‚½ê‡‚Ì“ñd‚É‚È‚ç‚È‚¢‚½‚ß‚Ì‘Îô
+        //  ã‚·ãƒ¼ãƒ³å´ã«è¤‡æ•°ç½®ã‹ã‚ŒãŸå ´åˆã®äºŒé‡ã«ãªã‚‰ãªã„ãŸã‚ã®å¯¾ç­–
         if (s_exists)
         {
             Destroy(gameObject);
@@ -25,7 +25,7 @@ public class PieceMaxSession : MonoBehaviour
 
         if (!pieceCounter)
         {
-            //  ƒs[ƒXƒJƒEƒ“ƒ^[‚ªŒ©‚Â‚©‚ç‚È‚©‚Á‚½ê‡‚Í”jŠü‚·‚é
+            //  ãƒ”ãƒ¼ã‚¹ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼ãŒè¦‹ã¤ã‹ã‚‰ãªã‹ã£ãŸå ´åˆã¯ç ´æ£„ã™ã‚‹
             s_exists = false;
             Destroy(gameObject);
             return;
@@ -33,7 +33,7 @@ public class PieceMaxSession : MonoBehaviour
         ApplySavedToCounter(pieceCounter);
         HookCounter(pieceCounter);
 
-        SceneManager.sceneLoaded += OnSceneLoaded;  //  ƒV[ƒ“Ø‚è‘Ö‚¦‚ÌƒCƒxƒ“ƒg“o˜^
+        SceneManager.sceneLoaded += OnSceneLoaded;  //  ã‚·ãƒ¼ãƒ³åˆ‡ã‚Šæ›¿ãˆæ™‚ã®ã‚¤ãƒ™ãƒ³ãƒˆç™»éŒ²
     }
 
     private void OnDestroy()
@@ -48,7 +48,7 @@ public class PieceMaxSession : MonoBehaviour
         UnhookCounter(pieceCounter);
         pieceCounter = FindObjectOfType<PieceCounter>();
 
-        //  Ÿ‚ÌƒV[ƒ“‚Éƒs[ƒXƒJƒEƒ“ƒ^[‚ª‘¶İ‚µ‚È‚©‚Á‚½ê‡‚Í”jŠü‚·‚é
+        //  æ¬¡ã®ã‚·ãƒ¼ãƒ³ã«ãƒ”ãƒ¼ã‚¹ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼ãŒå­˜åœ¨ã—ãªã‹ã£ãŸå ´åˆã¯ç ´æ£„ã™ã‚‹
         if (!pieceCounter)
         {
             SceneManager.sceneLoaded -= OnSceneLoaded;
@@ -65,7 +65,7 @@ public class PieceMaxSession : MonoBehaviour
     {
         if (!counter) return;
 
-        counter.InitializeMax(HoldBest.BestCount);  //  •Û‘¶Ï‚İ‚ÌÅ‘å’l‚ğ“K—p‚·‚é
+        counter.InitializeMax(HoldBest.BestCount);  //  ä¿å­˜æ¸ˆã¿ã®æœ€å¤§å€¤ã‚’é©ç”¨ã™ã‚‹
     }
 
     private void HookCounter(PieceCounter counter)

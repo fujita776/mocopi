@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -7,18 +7,18 @@ public class TriggerDestroyAndCount : MonoBehaviour
 {
     private FoodObject foodObj;
 
-    [Header("”jŠü‚ÌŒø‰Ê‰¹")]
+    [Header("ç ´æ£„æ™‚ã®åŠ¹æœéŸ³")]
     [SerializeField] private AudioClip destroyClip;
 
     private void Awake()
     {
-        // “¯‚¶ƒIƒuƒWƒFƒNƒg‚ÉƒAƒ^ƒbƒ`‚³‚ê‚½ FoodObject ‚ğæ“¾
+        // åŒã˜ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«ã‚¢ã‚¿ãƒƒãƒã•ã‚ŒãŸ FoodObject ã‚’å–å¾—
         foodObj = GetComponent<FoodObject>();
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        // u“Á’è‚ÌƒgƒŠƒK[ƒIƒuƒWƒFƒNƒgv‚ÆÕ“Ë‚µ‚½ê‡‚Ì‚İƒXƒRƒA‰ÁZ‚µAŒø‰Ê‰¹‚ÌÄ¶‚Æ”jŠü
+        // ã€Œç‰¹å®šã®ãƒˆãƒªã‚¬ãƒ¼ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã€ã¨è¡çªã—ãŸå ´åˆã®ã¿ã‚¹ã‚³ã‚¢åŠ ç®—ã—ã€åŠ¹æœéŸ³ã®å†ç”Ÿã¨ç ´æ£„
         if (other.CompareTag("DestroyFood"))
         {
             FoodScore.Instance.AddCount(foodObj.foodType);

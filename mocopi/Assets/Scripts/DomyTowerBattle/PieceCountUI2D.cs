@@ -1,17 +1,17 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
 public class PieceCountUI2D : MonoBehaviour
 {
-    [Header("PieceCounter‚ÌQÆ")]
+    [Header("PieceCounterã®å‚ç…§")]
     [SerializeField] private PieceCounter counter;
 
-    [Header("Œ»İ‚Ìƒs[ƒX”‚Ì•\¦ƒeƒLƒXƒg")]
+    [Header("ç¾åœ¨ã®ãƒ”ãƒ¼ã‚¹æ•°ã®è¡¨ç¤ºãƒ†ã‚­ã‚¹ãƒˆ")]
     [SerializeField] private TextMeshProUGUI[] currentCountTexts;
 
-    [Header("ƒV[ƒPƒ“ƒX’†‚ÌÅ‘åƒs[ƒX”‚Ì•\¦ƒeƒLƒXƒg")]
+    [Header("ã‚·ãƒ¼ã‚±ãƒ³ã‚¹ä¸­ã®æœ€å¤§ãƒ”ãƒ¼ã‚¹æ•°ã®è¡¨ç¤ºãƒ†ã‚­ã‚¹ãƒˆ")]
     [SerializeField] private TextMeshProUGUI maxCountText;
 
 
@@ -29,7 +29,7 @@ public class PieceCountUI2D : MonoBehaviour
         counter.OnCountChanged += UpdateCurrentText;
         counter.OnMaxCountUpdated += UpdateMaxText;
 
-        //  ‰Šú•\¦‚ÌXV
+        //  åˆæœŸè¡¨ç¤ºã®æ›´æ–°
         UpdateCurrentText(counter.CurrentCount);
         UpdateMaxText(counter.MaxCount);
     }

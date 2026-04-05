@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -7,12 +7,12 @@ public class HeightMaxSession : MonoBehaviour
 {
     [SerializeField] private HeightMeter2D heightMeter;
 
-    //  ‚±‚ÌƒV[ƒ“‚É‘¶İ‚µ‚Ä‚¢‚é‚©
+    //  ã“ã®ã‚·ãƒ¼ãƒ³ã«å­˜åœ¨ã—ã¦ã„ã‚‹ã‹
     private static bool s_exists = false;
 
     private void Awake()
     {
-        //  ƒV[ƒ“‘¤‚É•¡”’u‚©‚ê‚½ê‡‚Ì“ñd‚É‚È‚ç‚È‚¢‚½‚ß‚Ì‘Îô
+        //  ã‚·ãƒ¼ãƒ³å´ã«è¤‡æ•°ç½®ã‹ã‚ŒãŸå ´åˆã®äºŒé‡ã«ãªã‚‰ãªã„ãŸã‚ã®å¯¾ç­–
         if (s_exists)
         {
             Destroy(gameObject);
@@ -25,7 +25,7 @@ public class HeightMaxSession : MonoBehaviour
 
         if (!heightMeter)
         {
-            //  ‚‚³Œv‘ª—p‚ÌƒIƒuƒWƒFƒNƒg‚ªŒ©‚Â‚©‚ç‚È‚©‚Á‚½ê‡‚Í”jŠü‚·‚é
+            //  é«˜ã•è¨ˆæ¸¬ç”¨ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãŒè¦‹ã¤ã‹ã‚‰ãªã‹ã£ãŸå ´åˆã¯ç ´æ£„ã™ã‚‹
             s_exists = false;
             Destroy(gameObject);
             return;
@@ -34,7 +34,7 @@ public class HeightMaxSession : MonoBehaviour
         ApplySavedToMeter(heightMeter);
         HookMeter(heightMeter);
 
-        SceneManager.sceneLoaded += OnSceneLoaded;  //  ƒV[ƒ“Ø‚è‘Ö‚¦‚ÌƒCƒxƒ“ƒg“o˜^
+        SceneManager.sceneLoaded += OnSceneLoaded;  //  ã‚·ãƒ¼ãƒ³åˆ‡ã‚Šæ›¿ãˆæ™‚ã®ã‚¤ãƒ™ãƒ³ãƒˆç™»éŒ²
     }
 
     private void OnDestroy()
@@ -49,7 +49,7 @@ public class HeightMaxSession : MonoBehaviour
         UnhookMeter(heightMeter);
         heightMeter = FindObjectOfType<HeightMeter2D>();
 
-        //  Ÿ‚ÌƒV[ƒ“‚É‚‚³Œv‘ª—pƒIƒuƒWƒFƒNƒg‚ª‘¶İ‚µ‚È‚©‚Á‚½ê‡‚Í”jŠü‚·‚é
+        //  æ¬¡ã®ã‚·ãƒ¼ãƒ³ã«é«˜ã•è¨ˆæ¸¬ç”¨ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãŒå­˜åœ¨ã—ãªã‹ã£ãŸå ´åˆã¯ç ´æ£„ã™ã‚‹
         if (!heightMeter)
         {
             SceneManager.sceneLoaded -= OnSceneLoaded;
@@ -65,7 +65,7 @@ public class HeightMaxSession : MonoBehaviour
     private void ApplySavedToMeter(HeightMeter2D meter)
     {
         if (!meter) return;
-        meter.InitializeMax(HoldBest.BestHeight);  //  •Û‘¶‚³‚ê‚Ä‚¢‚éÅ‚“’B‚‚³‚ğ“K—p‚·‚é
+        meter.InitializeMax(HoldBest.BestHeight);  //  ä¿å­˜ã•ã‚Œã¦ã„ã‚‹æœ€é«˜åˆ°é”é«˜ã•ã‚’é©ç”¨ã™ã‚‹
     }
 
     private void HookMeter(HeightMeter2D meter)

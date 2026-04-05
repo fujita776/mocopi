@@ -1,13 +1,13 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class TowerGameOverZone2D : MonoBehaviour
 {
-    [Header("ƒQ[ƒ€ƒI[ƒo[‚Ìˆ—")]
+    [Header("ã‚²ãƒ¼ãƒ ã‚ªãƒ¼ãƒãƒ¼æ™‚ã®å‡¦ç†")]
     [SerializeField] private TowerGameOver gameOver;
 
-    [Header("”»’è‘ÎÛ")]
+    [Header("åˆ¤å®šå¯¾è±¡")]
     [SerializeField] private TowerPieceSpawner pieceSpawner;
 
     private Transform targetParent;
@@ -16,21 +16,21 @@ public class TowerGameOverZone2D : MonoBehaviour
     {
         if (!gameOver)
         {
-            Debug.LogError("TowerGameOverZone2D‚ÌTowerGameOver‚ªİ’è‚³‚ê‚Ä‚¢‚Ü‚¹‚ñB");
+            Debug.LogError("TowerGameOverZone2Dã®TowerGameOverãŒè¨­å®šã•ã‚Œã¦ã„ã¾ã›ã‚“ã€‚");
         }
 
-        //  ”»’è‘ÎÛ‚ÌeTransform‚ğæ“¾‚·‚é
+        //  åˆ¤å®šå¯¾è±¡ã®è¦ªTransformã‚’å–å¾—ã™ã‚‹
         targetParent = pieceSpawner ? pieceSpawner.SpawnParent : null;
 
         if (!targetParent)
         { 
-            Debug.LogError("TowerGameOverZone2D‚Ì”»’è‘ÎÛ‚ÌeTransform‚ªæ“¾‚Å‚«‚Ü‚¹‚ñB");
+            Debug.LogError("TowerGameOverZone2Dã®åˆ¤å®šå¯¾è±¡ã®è¦ªTransformãŒå–å¾—ã§ãã¾ã›ã‚“ã€‚");
         }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        //  ”»’è‘ÎÛ‚Ìe”z‰º‚É‚ ‚éƒIƒuƒWƒFƒNƒg‚ªG‚ê‚½‚çƒQ[ƒ€ƒI[ƒo[
+        //  åˆ¤å®šå¯¾è±¡ã®è¦ªé…ä¸‹ã«ã‚ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãŒè§¦ã‚ŒãŸã‚‰ã‚²ãƒ¼ãƒ ã‚ªãƒ¼ãƒãƒ¼
         if (targetParent && collision.transform.IsChildOf(targetParent))
         {
             gameOver.GameOver();

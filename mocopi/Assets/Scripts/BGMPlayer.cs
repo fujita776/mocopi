@@ -1,19 +1,19 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class BGMPlayer : MonoBehaviour
 {
-    //  Å‰‚É¶¬‚³‚ê‚½ 1 ‚Â‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ğ•Û‚·‚é
+    //  æœ€åˆã«ç”Ÿæˆã•ã‚ŒãŸ 1 ã¤ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’ä¿æŒã™ã‚‹
     private static BGMPlayer instance;
 
     private void Awake()
     {
-        //  ‚Ü‚¾ƒCƒ“ƒXƒ^ƒ“ƒX‚ª‘¶İ‚µ‚Ä‚¢‚È‚¢
+        //  ã¾ã ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ãŒå­˜åœ¨ã—ã¦ã„ãªã„æ™‚
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(gameObject);  //  ƒV[ƒ“‚ğØ‚è‘Ö‚¦‚Ä‚à”jŠü‚³‚ê‚È‚¢‚æ‚¤‚É
+            DontDestroyOnLoad(gameObject);  //  ã‚·ãƒ¼ãƒ³ã‚’åˆ‡ã‚Šæ›¿ãˆã¦ã‚‚ç ´æ£„ã•ã‚Œãªã„ã‚ˆã†ã«
         }
         else
         {

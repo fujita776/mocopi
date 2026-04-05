@@ -1,21 +1,21 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public interface IHandHolder
 {
-    //  ���������I�u�W�F�N�g���A�^�b�`����ہA���� Transform �̈ʒu�E��]���Q�Ƃ���
+    //  生成したオブジェクトをアタッチする際、この Transform の位置・回転を参照する
     Transform HandTransform { get; }
 
-    //  ���݁A�茳�Ɏ����Ă���I�u�W�F�N�g���擾����v���p�e�B
+    //  現在、手元に持っているオブジェクトを取得するプロパティ
     GameObject HeldItem { get; }
 
-    //  �w�肳�ꂽ�I�u�W�F�N�g���茳�ɃA�^�b�`���鏈�����s�����\�b�h
+    //  指定されたオブジェクトを手元にアタッチする処理を行うメソッド
     void AttachItem(GameObject item);
 
-    //  ���ݎ茳�ɕێ����Ă���I�u�W�F�N�g��������鏈�����s�����\�b�h
+    //  現在手元に保持しているオブジェクトを解放する処理を行うメソッド
     void DetachItem();
 
-    //  �w�肳�ꂽ�^�[�Q�b�g�ցA�w�肵���͂ŃA�C�e���𓊂���
+    //  指定されたターゲットへ、指定した力でアイテムを投げる
     void ThrowItem(Transform target, float force);
 }

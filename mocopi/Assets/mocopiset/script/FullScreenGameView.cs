@@ -1,7 +1,7 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEditor;
 
-// GameView‚ğƒtƒ‹ƒXƒNƒŠ[ƒ“‚Å•\¦‚·‚éƒXƒNƒŠƒvƒg(Windows‚ÍF11AmacOS‚ÍCommand+Shift+F‚ÅƒgƒOƒ‹“®ì)
+// GameViewã‚’ãƒ•ãƒ«ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ã§è¡¨ç¤ºã™ã‚‹ã‚¹ã‚¯ãƒªãƒ—ãƒˆ(Windowsã¯F11ã€macOSã¯Command+Shift+Fã§ãƒˆã‚°ãƒ«å‹•ä½œ)
 public class FullScreenGameView
 {
 //    const string menuPath = "Window/Game (Full Screen)";
@@ -17,11 +17,11 @@ public class FullScreenGameView
 
 //        if (Menu.GetChecked(menuPath) == false)
 //        {
-//            gameView.Close();       // ƒhƒbƒLƒ“ƒO’†‚ÉƒTƒCƒY‚ğ•Ï‚¦‚é‚ÆEditor‚ÌƒTƒCƒY‚à•Ï‚í‚Á‚Ä‚µ‚Ü‚¤‚½‚ßˆê’U•Â‚¶‚é
+//            gameView.Close();       // ãƒ‰ãƒƒã‚­ãƒ³ã‚°ä¸­ã«ã‚µã‚¤ã‚ºã‚’å¤‰ãˆã‚‹ã¨Editorã®ã‚µã‚¤ã‚ºã‚‚å¤‰ã‚ã£ã¦ã—ã¾ã†ãŸã‚ä¸€æ—¦é–‰ã˜ã‚‹
 
 //            float width = 1000f;
 //            float height = 500f;
-//            float offset = 17.0f;   // GameView‚ÌƒRƒ“ƒgƒ[ƒ‹ƒo[‚Ì‚‚³(Unity2017.1‚Ìê‡) ¦ƒ^ƒu‚â˜g‚ÍŒvZ‚É“ü‚ê‚È‚¢
+//            float offset = 17.0f;   // GameViewã®ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ«ãƒãƒ¼ã®é«˜ã•(Unity2017.1ã®å ´åˆ) â€»ã‚¿ãƒ–ã‚„æ ã¯è¨ˆç®—ã«å…¥ã‚Œãªã„
 
 //            gameView = GetGameView();
 //            gameView.minSize = new Vector2(width, height + offset);
@@ -31,7 +31,7 @@ public class FullScreenGameView
 //        }
 //        else
 //        {
-//            // ˆÊ’uƒpƒ‰ƒ[ƒ^‚ğƒfƒtƒHƒ‹ƒg‚É–ß‚µ‚Ä‚©‚çClose
+//            // ä½ç½®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã«æˆ»ã—ã¦ã‹ã‚‰Close
 //            gameView.minSize = minSize;
 //            gameView.position = position;
 //            gameView.Close();
@@ -42,11 +42,11 @@ public class FullScreenGameView
 
 //    private static EditorWindow GetGameView()
 //    {
-//        // ƒEƒBƒ“ƒhƒE‚ª‘¶İ‚µ‚È‚¢ê‡‚Í¶¬‚³‚ê‚é
+//        // ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãŒå­˜åœ¨ã—ãªã„å ´åˆã¯ç”Ÿæˆã•ã‚Œã‚‹
 //        return EditorWindow.GetWindow(System.Type.GetType("UnityEditor.GameView,UnityEditor"));
 //    }
 
-//    // ƒfƒtƒHƒ‹ƒgˆÊ’uƒpƒ‰ƒ[ƒ^(Œ³‚ÌˆÊ’u‚É‚Í–ß‚¹‚È‚¢‚Ì‚ÅAˆµ‚¢‚â‚·‚¢ˆÊ’u•ƒTƒCƒY‚É‚µ‚Ä‚¨‚­)
+//    // ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆä½ç½®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿(å…ƒã®ä½ç½®ã«ã¯æˆ»ã›ãªã„ã®ã§ã€æ‰±ã„ã‚„ã™ã„ä½ç½®ï¼†ã‚µã‚¤ã‚ºã«ã—ã¦ãŠã)
 //    private static Vector2 minSize = new Vector2(100.0f, 100.0f);
 //    private static Rect position = new Rect(0.0f, 0.0f, 640.0f, 480.0f);
 }

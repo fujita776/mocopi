@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,60 +6,60 @@ using UnityEngine;
 public static class CameraCapture
 {
     /// <summary>
-    ///  ƒJƒƒ‰‚ª‰f‚µ‚Ä‚¢‚é‚ ‚éƒŒƒCƒ„[‚É‘¶İ‚µ‚Ä‚¢‚éƒIƒuƒWƒFƒNƒg‚ğTexture2D‚É‚µ‚Äó‚¯æ‚éB
+    ///  ã‚«ãƒ¡ãƒ©ãŒæ˜ ã—ã¦ã„ã‚‹ã‚ã‚‹ãƒ¬ã‚¤ãƒ¤ãƒ¼ã«å­˜åœ¨ã—ã¦ã„ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’Texture2Dã«ã—ã¦å—ã‘å–ã‚‹ã€‚
     /// </summary>
     public static IEnumerator CaptureTexture2D(
-        Camera camera,  //  ƒLƒƒƒvƒ`ƒƒ‚Ég‚¤ƒJƒƒ‰
-        LayerMask targetLayer,  //  ‚±‚ÌƒŒƒCƒ„[‚Ì‚İ‰f‚·
-        int textureSize,  //  o—Í‚·‚é‰æ‘œ‚Ì•‚Æ‚‚³
-        Action<Texture2D> onCompleted  //  Š®¬‚µ‚½Œã‚É‘—‚éƒR[ƒ‹ƒoƒbƒN
+        Camera camera,  //  ã‚­ãƒ£ãƒ—ãƒãƒ£ã«ä½¿ã†ã‚«ãƒ¡ãƒ©
+        LayerMask targetLayer,  //  ã“ã®ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ã¿æ˜ ã™
+        int textureSize,  //  å‡ºåŠ›ã™ã‚‹ç”»åƒã®å¹…ã¨é«˜ã•
+        Action<Texture2D> onCompleted  //  å®Œæˆã—ãŸå¾Œã«é€ã‚‹ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯
         )
     {
         if(camera == null)
         {
-            Debug.LogError("ƒJƒƒ‰‚ª‘¶İ‚µ‚Ü‚¹‚ñ");
+            Debug.LogError("ã‚«ãƒ¡ãƒ©ãŒå­˜åœ¨ã—ã¾ã›ã‚“");
             yield break;
         }
 
         if(textureSize <= 0)
         {
-            Debug.LogError("ƒeƒNƒXƒ`ƒƒ‚ÌƒTƒCƒY‚Í0‚æ‚è‘å‚«‚­‚µ‚Ä‰º‚³‚¢");
+            Debug.LogError("ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ã‚µã‚¤ã‚ºã¯0ã‚ˆã‚Šå¤§ããã—ã¦ä¸‹ã•ã„");
             yield break;
         }
 
-        //  ƒJƒƒ‰‚Ì•\¦ƒŒƒCƒ„[‚Æo—Íæ‚ğ•Û‘¶‚·‚é
+        //  ã‚«ãƒ¡ãƒ©ã®è¡¨ç¤ºãƒ¬ã‚¤ãƒ¤ãƒ¼ã¨å‡ºåŠ›å…ˆã‚’ä¿å­˜ã™ã‚‹
         int originalMask = camera.cullingMask;
         RenderTexture originalRT = camera.targetTexture;
 
-        //  ƒJƒƒ‰‚ª•`‚¢‚½ŠG‚ğó‚¯æ‚é‚½‚ß‚Ì‰æ–Ê‚Ìì¬
+        //  ã‚«ãƒ¡ãƒ©ãŒæã„ãŸçµµã‚’å—ã‘å–ã‚‹ãŸã‚ã®ç”»é¢ã®ä½œæˆ
         var renderTexture = new RenderTexture(textureSize, textureSize, 16, RenderTextureFormat.ARGB32);
         renderTexture.Create();
 
-        camera.cullingMask = targetLayer;  //  w’è‚µ‚½ƒŒƒCƒ„[‚Ì•¨‚Ì‚İ•`‰æ‚·‚é
-        camera.targetTexture = renderTexture;  //  ƒJƒƒ‰‚Ìo—Íæ‚ğ•ÏX‚·‚é
+        camera.cullingMask = targetLayer;  //  æŒ‡å®šã—ãŸãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ç‰©ã®ã¿æç”»ã™ã‚‹
+        camera.targetTexture = renderTexture;  //  ã‚«ãƒ¡ãƒ©ã®å‡ºåŠ›å…ˆã‚’å¤‰æ›´ã™ã‚‹
 
-        yield return new WaitForEndOfFrame();  //  ‚±‚ÌƒtƒŒ[ƒ€‚ÌÅŒã‚Éˆ—‚·‚é
-        camera.Render();  //  ƒŒƒ“ƒ_ƒŠƒ“ƒO‚·‚é
+        yield return new WaitForEndOfFrame();  //  ã“ã®ãƒ•ãƒ¬ãƒ¼ãƒ ã®æœ€å¾Œã«å‡¦ç†ã™ã‚‹
+        camera.Render();  //  ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã™ã‚‹
 
-        RenderTexture prev = RenderTexture.active;  //  Œ»İ’l‚ğ•Û‘¶
-        RenderTexture.active = renderTexture;  //  renderTexture‚ğŒ»İ‚Ì“Ç‚İæ‚èæ‚Éw’è‚·‚é
+        RenderTexture prev = RenderTexture.active;  //  ç¾åœ¨å€¤ã‚’ä¿å­˜
+        RenderTexture.active = renderTexture;  //  renderTextureã‚’ç¾åœ¨ã®èª­ã¿å–ã‚Šå…ˆã«æŒ‡å®šã™ã‚‹
 
-        var tex = new Texture2D(textureSize, textureSize, TextureFormat.RGBA32, false);  //  ŠG‚ğŠi”[‚·‚é” ‚ğ—pˆÓ‚·‚é
+        var tex = new Texture2D(textureSize, textureSize, TextureFormat.RGBA32, false);  //  çµµã‚’æ ¼ç´ã™ã‚‹ç®±ã‚’ç”¨æ„ã™ã‚‹
 
-        tex.ReadPixels(new Rect(0, 0, textureSize, textureSize), 0, 0);  //  Œ»İ‚ÌRenderTexture.active‚©‚çTexture2D‚ÖƒRƒs[‚·‚é
+        tex.ReadPixels(new Rect(0, 0, textureSize, textureSize), 0, 0);  //  ç¾åœ¨ã®RenderTexture.activeã‹ã‚‰Texture2Dã¸ã‚³ãƒ”ãƒ¼ã™ã‚‹
 
-        tex.Apply();  //  ƒRƒs[‚µ‚½ƒsƒNƒZƒ‹‚ğŠm’è‚·‚é
+        tex.Apply();  //  ã‚³ãƒ”ãƒ¼ã—ãŸãƒ”ã‚¯ã‚»ãƒ«ã‚’ç¢ºå®šã™ã‚‹
 
-        RenderTexture.active = prev;  //  “Ç‚İæ‚èæ‚ğŒ³‚Ìó‘Ô‚É–ß‚·
+        RenderTexture.active = prev;  //  èª­ã¿å–ã‚Šå…ˆã‚’å…ƒã®çŠ¶æ…‹ã«æˆ»ã™
 
-        //  ƒJƒƒ‰İ’è‚ğŒ³‚É–ß‚·
+        //  ã‚«ãƒ¡ãƒ©è¨­å®šã‚’å…ƒã«æˆ»ã™
         camera.targetTexture = originalRT;
         camera.cullingMask = originalMask;
 
         renderTexture.Release();
         UnityEngine.Object.Destroy(renderTexture);
 
-        //  ƒR[ƒ‹ƒoƒbƒN‚ÅŒ‹‰Ê‚ğ•Ô‚·(ŒÄ‚Ño‚µ‚½‘¤‚ªtex‚ğÁ‚·)
+        //  ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ã§çµæœã‚’è¿”ã™(å‘¼ã³å‡ºã—ãŸå´ãŒtexã‚’æ¶ˆã™)
         onCompleted?.Invoke(tex);
 
     }

@@ -1,42 +1,42 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class DomyController : MonoBehaviour
 {
-    // ©“®¶¬‚³‚ê‚½Input ActionƒNƒ‰ƒX‚ÌƒCƒ“ƒXƒ^ƒ“ƒX
+    // è‡ªå‹•ç”Ÿæˆã•ã‚ŒãŸInput Actionã‚¯ãƒ©ã‚¹ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹
     private DomyInputActions inputActions;
 
-    // ˆÚ“®‘¬“x
+    // ç§»å‹•é€Ÿåº¦
     [SerializeField]private float moveSpeed = 5f;
 
-    //  ¡AƒgƒŠƒK[“à‚É‚¢‚éèŒ³‚É•Û‚µ‚Ä‚¢‚éƒRƒ“ƒ|[ƒlƒ“ƒg
+    //  ä»Šã€ãƒˆãƒªã‚¬ãƒ¼å†…ã«ã„ã‚‹æ‰‹å…ƒã«ä¿æŒã—ã¦ã„ã‚‹ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆ
     private IHandHolder currentHolder = new NullHandHolder();
     private void Awake()
     {
-        // InputActionƒAƒZƒbƒg‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ğ¶¬
+        // InputActionã‚¢ã‚»ãƒƒãƒˆã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’ç”Ÿæˆ
         inputActions = new DomyInputActions();
     }
 
     private void OnEnable()
     {
-        // •K—v‚ÈƒAƒNƒVƒ‡ƒ“ƒ}ƒbƒv‚ğ—LŒø‰»
+        // å¿…è¦ãªã‚¢ã‚¯ã‚·ãƒ§ãƒ³ãƒãƒƒãƒ—ã‚’æœ‰åŠ¹åŒ–
         inputActions.Player.Enable();
     }
 
     private void OnDisable()
     {
-        // ƒAƒNƒVƒ‡ƒ“ƒ}ƒbƒv‚ğ–³Œø‰»‚µ‚Ä‚¨‚­
+        // ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ãƒãƒƒãƒ—ã‚’ç„¡åŠ¹åŒ–ã—ã¦ãŠã
         inputActions.Player.Disable();
     }
 
     private void Update()
     {
-        //  MoveƒAƒNƒVƒ‡ƒ“‚©‚çVector2Œ^‚Ì“ü—Í’l‚ğæ“¾‚·‚é
+        //  Moveã‚¢ã‚¯ã‚·ãƒ§ãƒ³ã‹ã‚‰Vector2å‹ã®å…¥åŠ›å€¤ã‚’å–å¾—ã™ã‚‹
         Vector2 moveInput = inputActions.Player.Move.ReadValue<Vector2>();
 
-        //  “ü—Í‚ÉŠî‚Ã‚¢‚ÄƒLƒƒƒ‰ƒNƒ^[‚ğˆÚ“®‚·‚é
+        //  å…¥åŠ›ã«åŸºã¥ã„ã¦ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ã‚’ç§»å‹•ã™ã‚‹
         Vector3 movement = new Vector3(moveInput.x, 0, moveInput.y);
         transform.Translate(movement * moveSpeed * Time.deltaTime, Space.World);
     }

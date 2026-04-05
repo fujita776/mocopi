@@ -1,37 +1,37 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class DroppablePiece : MonoBehaviour
 {
-    [Header("ƒvƒŒƒrƒ…[‚Ì‘€ì—Ê")]
-    [Header("ƒ{ƒ^ƒ“1‰ñ‚Å‰ñ‚·Šp“x")]
-    [SerializeField] private float rotateDommy = 15f;  //  ‰ñ“]‚ÌŠp“x
-    [Header("ˆÚ“®—Ê")]
-    [SerializeField] private float moveDommy = 0.25f;  //  ˆÚ“®‚Ì‹——£
+    [Header("ãƒ—ãƒ¬ãƒ“ãƒ¥ãƒ¼æ™‚ã®æ“ä½œé‡")]
+    [Header("ãƒœã‚¿ãƒ³1å›ã§å›ã™è§’åº¦")]
+    [SerializeField] private float rotateDommy = 15f;  //  å›è»¢ã®è§’åº¦
+    [Header("ç§»å‹•é‡")]
+    [SerializeField] private float moveDommy = 0.25f;  //  ç§»å‹•ã®è·é›¢
 
-    [Header("ƒfƒoƒbƒO—p‚Ì•\¦(—‚Æ‚µ‚½‚©‚Ç‚¤‚©)")]
+    [Header("ãƒ‡ãƒãƒƒã‚°ç”¨ã®è¡¨ç¤º(è½ã¨ã—ãŸã‹ã©ã†ã‹)")]
     [SerializeField] private bool hasDropped = false;
 
-    [Header("’â~‚Æ‚İ‚È‚·ğŒ")]
-    [SerializeField] private float stopVelocityThreshold = 0.05f;  //  ‚±‚Ì‘¬“xˆÈ‰º‚È‚ç’â~‚Æ‚İ‚È‚·
-    [SerializeField] private float stopAngularVelocityThreshold = 5f;  //  ‚±‚ÌŠp‘¬“xˆÈ‰º‚È‚ç’â~‚Æ‚İ‚È‚·
-    [SerializeField] private float stopDuration = 0.5f;  //  ‚±‚ÌŠÔˆÈã’â~ó‘Ô‚ª‘±‚¢‚½‚çŠ®‘S’â~‚Æ‚İ‚È‚·
+    [Header("åœæ­¢ã¨ã¿ãªã™æ¡ä»¶")]
+    [SerializeField] private float stopVelocityThreshold = 0.05f;  //  ã“ã®é€Ÿåº¦ä»¥ä¸‹ãªã‚‰åœæ­¢ã¨ã¿ãªã™
+    [SerializeField] private float stopAngularVelocityThreshold = 5f;  //  ã“ã®è§’é€Ÿåº¦ä»¥ä¸‹ãªã‚‰åœæ­¢ã¨ã¿ãªã™
+    [SerializeField] private float stopDuration = 0.5f;  //  ã“ã®æ™‚é–“ä»¥ä¸Šåœæ­¢çŠ¶æ…‹ãŒç¶šã„ãŸã‚‰å®Œå…¨åœæ­¢ã¨ã¿ãªã™
 
-    [Header("—‰ºŠJn‚ÌŒø‰Ê‰¹")]
+    [Header("è½ä¸‹é–‹å§‹æ™‚ã®åŠ¹æœéŸ³")]
     [SerializeField] private AudioClip dropSound;
 
     [SerializeField] private AudioSource audioSource;
 
-    //  ƒJƒEƒ“ƒgÏ‚İ‚©‚Ç‚¤‚©‚Ìƒtƒ‰ƒO
+    //  ã‚«ã‚¦ãƒ³ãƒˆæ¸ˆã¿ã‹ã©ã†ã‹ã®ãƒ•ãƒ©ã‚°
     public bool HasCounted 
     { 
         get;
         private set; 
     } 
 
-    //  ‚±‚Ìƒs[ƒX‚ªŠ®‘S‚É’â~‚µ‚½‚ÌƒCƒxƒ“ƒg
+    //  ã“ã®ãƒ”ãƒ¼ã‚¹ãŒå®Œå…¨ã«åœæ­¢ã—ãŸæ™‚ã®ã‚¤ãƒ™ãƒ³ãƒˆ
     public event System.Action OnPieceStopped;
 
     private Rigidbody2D rb;
@@ -43,7 +43,7 @@ public class DroppablePiece : MonoBehaviour
 
     void Start()
     {
-        //  ƒvƒŒƒrƒ…[ŠJn‚É’â~ó‘Ô‚Å‚È‚¯‚ê‚Î’â~‚·‚é
+        //  ãƒ—ãƒ¬ãƒ“ãƒ¥ãƒ¼é–‹å§‹æ™‚ã«åœæ­¢çŠ¶æ…‹ã§ãªã‘ã‚Œã°åœæ­¢ã™ã‚‹
         if(!rb.isKinematic && !hasDropped)
         {
             rb.isKinematic = true;
@@ -60,46 +60,46 @@ public class DroppablePiece : MonoBehaviour
     {
         if(hasDropped) return;
         hasDropped = true;
-        rb.isKinematic = false;  //  kinematic‚ğ‰ğœ‚·‚é‚ÆAspawn‚Éİ’èÏ‚İ‚ÌgravityScale‚É•Ï‚í‚é
+        rb.isKinematic = false;  //  kinematicã‚’è§£é™¤ã™ã‚‹ã¨ã€spawnæ™‚ã«è¨­å®šæ¸ˆã¿ã®gravityScaleã«å¤‰ã‚ã‚‹
 
         if(dropSound && audioSource)
         {
             audioSource.PlayOneShot(dropSound);
         }
 
-        //  ’â~ŠÄ‹ƒRƒ‹[ƒ`ƒ“‚ğŠJn‚·‚é
+        //  åœæ­¢ç›£è¦–ã‚³ãƒ«ãƒ¼ãƒãƒ³ã‚’é–‹å§‹ã™ã‚‹
         StartCoroutine(WatchStop());
     }
 
-    //  ƒvƒŒƒrƒ…[’†‚Ì¶‰ñ“]
+    //  ãƒ—ãƒ¬ãƒ“ãƒ¥ãƒ¼ä¸­ã®å·¦å›è»¢
     public void RotateLeft()
     {
         if(hasDropped) return;
-        transform.Rotate(0f, 0f, rotateDommy);  //  Z²¶‰ñ‚è‰ñ“]
+        transform.Rotate(0f, 0f, rotateDommy);  //  Zè»¸å·¦å›ã‚Šå›è»¢
     }
 
-    //  ƒvƒŒƒrƒ…[’†‚Ì‰E‰ñ“]
+    //  ãƒ—ãƒ¬ãƒ“ãƒ¥ãƒ¼ä¸­ã®å³å›è»¢
     public void RotateRight()
     {
         if(hasDropped) return;
-        transform.Rotate(0f, 0f, -rotateDommy);  //  Z²‰E‰ñ‚è‰ñ“]
+        transform.Rotate(0f, 0f, -rotateDommy);  //  Zè»¸å³å›ã‚Šå›è»¢
 
     }
 
-    //  ƒvƒŒƒrƒ…[’†‚Ì”÷ˆÚ“®
+    //  ãƒ—ãƒ¬ãƒ“ãƒ¥ãƒ¼ä¸­ã®å¾®ç§»å‹•
     public void MoveStep(Vector2 dir)
     {
         if(hasDropped) return;
 
         if(dir.sqrMagnitude <= 0f) return;
 
-        //  ³‹K‰»‚µ‚Ä1ƒXƒeƒbƒv•ª‚¾‚¯ˆÚ“®‚·‚é
+        //  æ­£è¦åŒ–ã—ã¦1ã‚¹ãƒ†ãƒƒãƒ—åˆ†ã ã‘ç§»å‹•ã™ã‚‹
         Vector2 step = dir.normalized * moveDommy;
         transform.position += (Vector3)step;
 
     }
 
-    //  —‰ºÏ‚İ‚©‚Ç‚¤‚©‚ÌŠO•”QÆ
+    //  è½ä¸‹æ¸ˆã¿ã‹ã©ã†ã‹ã®å¤–éƒ¨å‚ç…§
     public bool HasDropped => hasDropped;
 
     private IEnumerator WatchStop()
@@ -110,18 +110,18 @@ public class DroppablePiece : MonoBehaviour
 
         while(true) 
         {
-            //  ’â~ó‘Ô‚©‚Ç‚¤‚©‚ğƒ`ƒFƒbƒN
+            //  åœæ­¢çŠ¶æ…‹ã‹ã©ã†ã‹ã‚’ãƒã‚§ãƒƒã‚¯
             bool isStopped = rb.IsSleeping() || (rb.velocity.sqrMagnitude < (stopVelocityThreshold * stopVelocityThreshold) && Mathf.Abs(rb.angularVelocity) < stopAngularVelocityThreshold);
 
-            //  ŠÔ‚ªŒo‰ß‚µ‚½‚çŠ®‘S’â~‚Æ‚İ‚È‚·
+            //  æ™‚é–“ãŒçµŒéã—ãŸã‚‰å®Œå…¨åœæ­¢ã¨ã¿ãªã™
             t = isStopped ? t + Time.fixedDeltaTime : 0f;
 
-            //  Š®‘S’â~‚µ‚½‚çƒ‹[ƒvI—¹
+            //  å®Œå…¨åœæ­¢ã—ãŸã‚‰ãƒ«ãƒ¼ãƒ—çµ‚äº†
             if (t >= stopDuration)
             {
                 break;
             }
-            //  Ÿ‚ÌƒtƒŒ[ƒ€‚Ü‚Å‘Ò‹@
+            //  æ¬¡ã®ãƒ•ãƒ¬ãƒ¼ãƒ ã¾ã§å¾…æ©Ÿ
             yield return wait;
         }
 

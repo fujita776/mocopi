@@ -1,8 +1,8 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//  ƒV[ƒ“Ø‚è‘Ö‚¦‚½Œã‚Å‚àÅ‚“’B‚µ‚½‚‚³‚Æƒs[ƒX‚Ì”‚ğc‚µ‚Ä‚¨‚­‚½‚ß‚Ì‚à‚Ì
+//  ã‚·ãƒ¼ãƒ³åˆ‡ã‚Šæ›¿ãˆãŸå¾Œã§ã‚‚æœ€é«˜åˆ°é”ã—ãŸé«˜ã•ã¨ãƒ”ãƒ¼ã‚¹ã®æ•°ã‚’æ®‹ã—ã¦ãŠããŸã‚ã®ã‚‚ã®
 public static class HoldBest
 {
     public static float BestHeight = 0f;
