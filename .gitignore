@@ -79,3 +79,11 @@ Assets/Fonts/*.otf
 # TextMeshProのFont Asset（不要なら）
 mocopi/Assets/font/*.asset
 
+.idea
+
+# ONNXモデル（大容量 - 各自でエクスポートして配置）
+mocopi/Assets/Models/**/*.onnx
+
+# モデルエクスポート作業ディレクトリ
+whisper-tiny/
+opus-mt-ja-en/
