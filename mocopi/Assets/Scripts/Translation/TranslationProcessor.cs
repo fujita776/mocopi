@@ -119,8 +119,8 @@ public class TranslationProcessor : MonoBehaviour
         yield return null;
 
         //  Decoder: greedy decode
-        //  opus-mtのデコーダ開始トークンは </s> (EOS) + <pad>
-        var tokens = new List<int> { _tgtTokenizer.PadTokenId };
+        //  opus-mtのデコーダ開始トークンは </s> (EOS=0)
+        var tokens = new List<int> { _tgtTokenizer.EosTokenId };
         int stepCount = 0;
 
         for (int step = 0; step < maxTokens; step++)

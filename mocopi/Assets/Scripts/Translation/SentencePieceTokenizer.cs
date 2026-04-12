@@ -4,13 +4,14 @@ using System.Text;
 using UnityEngine;
 
 /// <summary>
-/// opus-mt用 簡易SentencePieceトークナイザ
-/// vocab.json（{token: id}形式）を読み込み、テキストのトークナイズ/デトークナイズを行う
+/// opus-mt用 SentencePieceトークナイザ
+/// vocab.json（{token: id}形式）を読み込み、最長一致法でトークナイズする
 /// </summary>
 public class SentencePieceTokenizer
 {
     private Dictionary<string, int> _tokenToId = new Dictionary<string, int>();
     private Dictionary<int, string> _idToToken = new Dictionary<int, string>();
+    private int _maxTokenLength;
     private bool _loaded;
 
     //  opus-mt特殊トークン
@@ -20,9 +21,6 @@ public class SentencePieceTokenizer
 
     private const string SentencePiecePrefix = "\u2581"; // ▁（U+2581）
 
-    /// <summary>
-    /// vocab.jsonを読み込む
-    /// </summary>
     public bool Load(string vocabPath)
     {
         if (!File.Exists(vocabPath))
@@ -35,9 +33,12 @@ public class SentencePieceTokenizer
         _tokenToId = ParseVocabJson(json);
 
         _idToToken.Clear();
+        _maxTokenLength = 0;
         foreach (var kvp in _tokenToId)
         {
             _idToToken[kvp.Value] = kvp.Key;
+            if (kvp.Key.Length > _maxTokenLength)
+                _maxTokenLength = kvp.Key.Length;
         }
 
         //  特殊トークンIDを検索
@@ -46,13 +47,12 @@ public class SentencePieceTokenizer
         if (_tokenToId.TryGetValue("<unk>", out int unkId)) UnkTokenId = unkId;
 
         _loaded = true;
-        Debug.Log($"[SentencePieceTokenizer] ボキャブラリ読み込み完了: {_tokenToId.Count} トークン (EOS={EosTokenId})");
+        Debug.Log($"[SentencePieceTokenizer] ボキャブラリ読み込み完了: {_tokenToId.Count} トークン (EOS={EosTokenId}, PAD={PadTokenId})");
         return true;
     }
 
     /// <summary>
-    /// テキストをトークンIDに変換
-    /// 簡易実装: スペース区切り + ▁プレフィックス
+    /// テキストをトークンIDに変換（最長一致法）
     /// </summary>
     public int[] Encode(string text)
     {
@@ -60,35 +60,38 @@ public class SentencePieceTokenizer
 
         var tokens = new List<int>();
 
-        //  テキストをスペースで分割し、各単語に▁プレフィックスを付ける
-        string[] words = text.Split(' ');
-        for (int w = 0; w < words.Length; w++)
+        //  SentencePiece形式: 文頭に▁を付加
+        string input = SentencePiecePrefix + text;
+
+        int pos = 0;
+        while (pos < input.Length)
         {
-            string word = words[w].Trim();
-            if (string.IsNullOrEmpty(word)) continue;
+            //  現在位置から最長一致するトークンを探す
+            int bestLen = 0;
+            int bestId = UnkTokenId;
 
-            //  先頭単語には▁を付ける
-            string prefixedWord = SentencePiecePrefix + word;
-
-            //  ボキャブラリで完全一致を試みる
-            if (_tokenToId.TryGetValue(prefixedWord, out int fullId))
+            int maxLen = Mathf.Min(_maxTokenLength, input.Length - pos);
+            for (int len = maxLen; len >= 1; len--)
             {
-                tokens.Add(fullId);
-                continue;
+                string candidate = input.Substring(pos, len);
+                if (_tokenToId.TryGetValue(candidate, out int id))
+                {
+                    bestLen = len;
+                    bestId = id;
+                    break;
+                }
             }
 
-            //  文字単位でフォールバック
-            foreach (char c in prefixedWord)
+            if (bestLen == 0)
             {
-                string charStr = c.ToString();
-                if (_tokenToId.TryGetValue(charStr, out int charId))
-                {
-                    tokens.Add(charId);
-                }
-                else
-                {
-                    tokens.Add(UnkTokenId);
-                }
+                //  1文字もマッチしない場合はUNKとして1文字進める
+                tokens.Add(UnkTokenId);
+                pos++;
+            }
+            else
+            {
+                tokens.Add(bestId);
+                pos += bestLen;
             }
         }
 
@@ -108,7 +111,6 @@ public class SentencePieceTokenizer
         var sb = new StringBuilder();
         foreach (int id in tokenIds)
         {
-            //  特殊トークンをスキップ
             if (id == EosTokenId || id == PadTokenId) continue;
 
             if (_idToToken.TryGetValue(id, out string token))
@@ -117,7 +119,7 @@ public class SentencePieceTokenizer
             }
         }
 
-        //  ▁をスペースに変換
+        //  ▁をスペースに変換し、先頭スペースを除去
         string result = sb.ToString().Replace(SentencePiecePrefix, " ");
         return result.Trim();
     }
