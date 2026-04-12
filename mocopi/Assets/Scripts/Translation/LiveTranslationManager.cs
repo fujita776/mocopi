@@ -5,28 +5,20 @@ using Whisper.Utils;
 
 /// <summary>
 /// ライブ翻訳パイプラインの統合管理
-/// 既存のuLipSyncMicrophoneの音声 → whisper.unity（STT/翻訳） → 字幕UI
-/// Whisper内蔵の翻訳機能を使い、opus-mtは不要。
+/// 設定はLiveTranslationSettings（ScriptableObject）で全シーン共通化
 /// </summary>
 public class LiveTranslationManager : MonoBehaviour
 {
-    [Header("Whisper STT")]
+    [Header("共通設定")]
+    [SerializeField] private LiveTranslationSettings settings;
+
+    [Header("コンポーネント")]
     [SerializeField] private WhisperManager whisperManager;
-
-    [Header("音声ブリッジ（既存AudioSourceからデータ取得）")]
     [SerializeField] private AudioBridge audioBridge;
-
-    [Header("UI")]
     [SerializeField] private SubtitleUI subtitleUI;
 
     [Header("動作設定")]
     [SerializeField] private bool autoStart = true;
-
-    [Header("ON/OFF切替キー")]
-    [Tooltip("字幕の表示ON/OFFを切り替えるキー")]
-    [SerializeField] private KeyCode subtitleToggleKey = KeyCode.F1;
-    [Tooltip("翻訳ON/OFFを切り替えるキー（ON=英語, OFF=日本語）")]
-    [SerializeField] private KeyCode translationToggleKey = KeyCode.F2;
 
     private const string PrefSubtitleEnabled = "LiveTranslation.SubtitleEnabled";
     private const string PrefTranslationEnabled = "LiveTranslation.TranslationEnabled";
@@ -44,17 +36,24 @@ public class LiveTranslationManager : MonoBehaviour
 
         if (!ValidateComponents()) return;
 
-        audioBridge.AutoDetectAudioSource();
-        if (!audioBridge.HasSource)
+        //  モデルファイルの存在チェック
+        string modelPath = settings.isModelPathInStreamingAssets
+            ? System.IO.Path.Combine(Application.streamingAssetsPath, settings.modelPath)
+            : settings.modelPath;
+        if (!System.IO.File.Exists(modelPath))
         {
-            Debug.LogError("[LiveTranslation] AudioBridge: 音声ソースが見つかりません");
+            string msg = $"Whisperモデル ({settings.modelPath}) が見つかりません。\n\n" +
+                "Dropboxからダウンロードして Assets/StreamingAssets/ に配置してください。";
+            Debug.LogError($"[LiveTranslation] {msg}");
+#if UNITY_EDITOR
+            UnityEditor.EditorUtility.DisplayDialog("Live Translation - モデル未配置", msg, "OK");
+#endif
             enabled = false;
             return;
         }
 
-        //  Whisper設定
-        whisperManager.language = "ja";
-        whisperManager.translateToEnglish = _translationEnabled;
+        //  ScriptableObjectからWhisperManager設定を適用
+        ApplySettings();
 
         //  モデル読み込み
         if (!whisperManager.IsLoaded && !whisperManager.IsLoading)
@@ -75,10 +74,27 @@ public class LiveTranslationManager : MonoBehaviour
 
         Debug.Log("[LiveTranslation] Whisperモデル読み込み完了");
 
-        //  マイクなしでストリーム作成（手動モード）
+        //  AudioBridge設定
+        audioBridge.AutoDetectAudioSource();
+        if (!audioBridge.HasSource)
+        {
+            Debug.LogError("[LiveTranslation] AudioBridge: 音声ソースが見つかりません");
+            enabled = false;
+            return;
+        }
+
+        //  MicrophoneRecordのAudioSourceをミュート（再生音防止）
+        var micAudioSource = GetComponent<AudioSource>();
+        if (micAudioSource != null)
+        {
+            micAudioSource.volume = 0f;
+            micAudioSource.mute = true;
+        }
+
+        //  ストリーム作成
         var freq = AudioSettings.outputSampleRate;
         _stream = await whisperManager.CreateStream(freq, 1);
-        _stream.OnResultUpdated += OnResult;
+        _stream.OnSegmentFinished += OnSegmentFinished;
 
         audioBridge.SetChunkCallback(chunk => _stream.AddToStream(chunk));
 
@@ -92,11 +108,29 @@ public class LiveTranslationManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(subtitleToggleKey))
+        if (settings == null) return;
+
+        if (Input.GetKeyDown(settings.subtitleToggleKey))
             ToggleSubtitle();
 
-        if (Input.GetKeyDown(translationToggleKey))
+        if (Input.GetKeyDown(settings.translationToggleKey))
             ToggleTranslation();
+    }
+
+    private void ApplySettings()
+    {
+        //  public フィールドをScriptableObjectから反映
+        whisperManager.language = "ja";
+        whisperManager.translateToEnglish = _translationEnabled;
+        whisperManager.noContext = settings.noContext;
+        whisperManager.useVad = settings.useVad;
+        whisperManager.dropOldBuffer = settings.dropOldBuffer;
+        whisperManager.stepSec = settings.stepSec;
+        whisperManager.keepSec = settings.keepSec;
+        whisperManager.lengthSec = settings.lengthSec;
+        whisperManager.updatePrompt = settings.updatePrompt;
+
+        //  privateフィールド（modelPath等）はEditorセットアップ時に設定済み
     }
 
     public void ToggleSubtitle()
@@ -118,28 +152,32 @@ public class LiveTranslationManager : MonoBehaviour
         PlayerPrefs.SetInt(PrefTranslationEnabled, _translationEnabled ? 1 : 0);
         PlayerPrefs.Save();
 
-        //  Whisperの翻訳モードを切替
         whisperManager.translateToEnglish = _translationEnabled;
-
-        //  ストリームを再作成して設定を反映
+        ForceUpdateWhisperParams();
         await RecreateStream();
 
         Debug.Log($"[LiveTranslation] 翻訳: {(_translationEnabled ? "ON (英語)" : "OFF (日本語)")}");
     }
 
+    private void ForceUpdateWhisperParams()
+    {
+        var method = whisperManager.GetType().GetMethod("UpdateParams",
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        if (method != null)
+            method.Invoke(whisperManager, null);
+    }
+
     private async Task RecreateStream()
     {
-        //  旧ストリームを解除
         if (_stream != null)
         {
-            _stream.OnResultUpdated -= OnResult;
+            _stream.OnSegmentFinished -= OnSegmentFinished;
             audioBridge.SetChunkCallback(null);
         }
 
-        //  新ストリームを作成
         var freq = AudioSettings.outputSampleRate;
         _stream = await whisperManager.CreateStream(freq, 1);
-        _stream.OnResultUpdated += OnResult;
+        _stream.OnSegmentFinished += OnSegmentFinished;
         _stream.StartStream();
 
         audioBridge.SetChunkCallback(chunk => _stream.AddToStream(chunk));
@@ -154,12 +192,18 @@ public class LiveTranslationManager : MonoBehaviour
     {
         if (_stream != null)
         {
-            _stream.OnResultUpdated -= OnResult;
+            _stream.OnSegmentFinished -= OnSegmentFinished;
             _stream = null;
         }
 
         if (audioBridge != null)
             audioBridge.SetChunkCallback(null);
+
+        foreach (var device in Microphone.devices)
+        {
+            if (Microphone.IsRecording(device))
+                Microphone.End(device);
+        }
     }
 
     public void StartTranslation()
@@ -172,17 +216,38 @@ public class LiveTranslationManager : MonoBehaviour
         Debug.Log("[LiveTranslation] パイプライン開始");
     }
 
-    private void OnResult(string text)
+    private void OnSegmentFinished(WhisperResult segment)
     {
+        if (segment == null) return;
+        string text = segment.Result?.Trim();
         if (string.IsNullOrWhiteSpace(text)) return;
         if (!_subtitleEnabled) return;
 
-        Debug.Log($"[LiveTranslation] 結果: {text}");
+        //  幻覚フィルタ
+        if (settings != null && settings.hallucinationFilter != null)
+        {
+            foreach (var h in settings.hallucinationFilter)
+            {
+                if (text.Contains(h))
+                {
+                    Debug.Log($"[LiveTranslation] 幻覚フィルタ: \"{text}\"");
+                    return;
+                }
+            }
+        }
+
+        Debug.Log($"[LiveTranslation] セグメント: {text}");
         subtitleUI.ShowSubtitle(text);
     }
 
     private bool ValidateComponents()
     {
+        if (settings == null)
+        {
+            Debug.LogError("[LiveTranslation] LiveTranslationSettings が設定されていません");
+            enabled = false;
+            return false;
+        }
         if (whisperManager == null)
             whisperManager = GetComponentInChildren<WhisperManager>();
         if (audioBridge == null)
@@ -192,12 +257,11 @@ public class LiveTranslationManager : MonoBehaviour
 
         if (whisperManager == null || audioBridge == null || subtitleUI == null)
         {
-            Debug.LogError("[LiveTranslation] 必要なコンポーネントが見つかりません: " +
-                "WhisperManager, AudioBridge, SubtitleUI");
+            Debug.LogError("[LiveTranslation] 必要なコンポーネントが見つかりません");
             enabled = false;
             return false;
         }
-
         return true;
     }
+
 }

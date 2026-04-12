@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f58cd7b8410f445fbed8d40a8573aca, type: 3}
+  m_Name: LiveTranslationSettings
+  m_EditorClassIdentifier: 
+  modelPath: ggml-small.bin
+  isModelPathInStreamingAssets: 1
+  useGpu: 0
+  flashAttention: 0
+  stepSec: 3
+  keepSec: 0.2
+  lengthSec: 10
+  updatePrompt: 1
+  dropOldBuffer: 1
+  useVad: 1
+  noContext: 1
+  chunkIntervalSeconds: 0.5
+  fadeDuration: 0.3
+  displayDuration: 5
+  fontSize: 32
+  subtitleToggleKey: 282
+  translationToggleKey: 283
+  hallucinationFilter:
+  - "\u3054\u8996\u8074\u3042\u308A\u304C\u3068\u3046\u3054\u3056\u3044\u307E\u3057\u305F"
+  - "\u4ECA\u65E5\u3082\u304A\u4F1A\u3044\u3057\u307E\u3057\u3087\u3046"
+  - "\u304A\u75B2\u308C\u69D8\u3067\u3057\u305F"
+  - "\u30C1\u30E3\u30F3\u30CD\u30EB\u767B\u9332\u3088\u308D\u3057\u304F\u304A\u9858\u3044\u3057\u307E\u3059"
+  - "\u3042\u308A\u304C\u3068\u3046\u3054\u3056\u3044\u307E\u3057\u305F"
+  - "\u304A\u3084\u3059\u307F\u306A\u3055\u3044"
+  - Thank you for watching
+  - Thanks for watching
+  - See you next time
+  - Bye
+  - Thank you.
+  - "(\u7B11)"

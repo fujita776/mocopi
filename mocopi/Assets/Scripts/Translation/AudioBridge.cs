@@ -2,61 +2,90 @@ using UnityEngine;
 using Whisper.Utils;
 
 /// <summary>
-/// 既存のuLipSyncMicrophone用AudioSourceから音声データを読み取り、
+/// uLipSyncMicrophoneが使用しているマイクのAudioClipから直接音声を読み取り、
 /// WhisperStreamに流すブリッジ。
-/// マイクの二重キャプチャを防ぎ、リップシンクとSTTを共存させる。
+/// Microphone.GetPosition()で録音位置を追跡するため、安定したデータ供給が可能。
 /// </summary>
 public class AudioBridge : MonoBehaviour
 {
-    [Header("音声ソース（LipSyncR等のAudioSource）")]
-    [SerializeField] private AudioSource sourceAudioSource;
-
     [Header("チャンク設定")]
     [SerializeField] private float chunkIntervalSeconds = 0.5f;
 
+    private AudioClip _micClip;
+    private string _micDeviceName;
     private int _lastReadPos;
     private float _timer;
     private System.Action<AudioChunk> _onChunkReady;
+    private bool _ready;
 
-    /// <summary>
-    /// チャンク受信コールバックを設定
-    /// </summary>
     public void SetChunkCallback(System.Action<AudioChunk> callback)
     {
         _onChunkReady = callback;
     }
 
     /// <summary>
-    /// AudioSourceを自動検出して設定
+    /// uLipSyncMicrophoneが使っているマイクデバイスとAudioClipを自動検出
     /// </summary>
     public void AutoDetectAudioSource()
     {
-        if (sourceAudioSource != null) return;
+        _ready = false;
 
-        //  uLipSyncMicrophoneがあるオブジェクトのAudioSourceを探す
         var lipSyncMic = FindObjectOfType<uLipSync.uLipSyncMicrophone>();
         if (lipSyncMic != null)
         {
-            sourceAudioSource = lipSyncMic.GetComponent<AudioSource>();
-            Debug.Log($"[AudioBridge] uLipSyncMicrophone のAudioSourceを検出: {lipSyncMic.gameObject.name}");
-            return;
+            var audioSource = lipSyncMic.GetComponent<AudioSource>();
+            if (audioSource != null && audioSource.clip != null)
+            {
+                _micClip = audioSource.clip;
+
+                //  uLipSyncMicrophoneが使っているデバイス名を取得
+                var deviceField = lipSyncMic.device;
+                _micDeviceName = deviceField.name;
+
+                _ready = true;
+                Debug.Log($"[AudioBridge] マイク検出: {_micDeviceName}, clip={_micClip.frequency}Hz {_micClip.channels}ch");
+                return;
+            }
         }
 
-        //  uLipSyncがあるオブジェクトのAudioSourceを探す
-        var lipSync = FindObjectOfType<uLipSync.uLipSync>();
-        if (lipSync != null)
+        //  フォールバック: 録音中のマイクデバイスを探す
+        foreach (var device in Microphone.devices)
         {
-            sourceAudioSource = lipSync.GetComponent<AudioSource>();
-            Debug.Log($"[AudioBridge] uLipSync のAudioSourceを検出: {lipSync.gameObject.name}");
+            if (Microphone.IsRecording(device))
+            {
+                _micDeviceName = device;
+                //  AudioSourceからclipを取得
+                var audioSources = FindObjectsOfType<AudioSource>();
+                foreach (var src in audioSources)
+                {
+                    if (src.clip != null && src.isPlaying)
+                    {
+                        _micClip = src.clip;
+                        _ready = true;
+                        Debug.Log($"[AudioBridge] フォールバック検出: {device}, clip={_micClip.frequency}Hz");
+                        return;
+                    }
+                }
+            }
         }
+
+        Debug.LogWarning("[AudioBridge] マイクAudioClipが見つかりません。uLipSyncMicrophoneの初期化完了後に再検出します。");
     }
 
-    public bool HasSource => sourceAudioSource != null;
+    public bool HasSource => _ready;
 
     void Update()
     {
-        if (sourceAudioSource == null || sourceAudioSource.clip == null) return;
+        //  遅延初期化: uLipSyncMicrophoneの起動を待つ
+        if (!_ready)
+        {
+            TryLateDetect();
+            if (!_ready) return;
+        }
+
         if (_onChunkReady == null) return;
+        if (_micClip == null || string.IsNullOrEmpty(_micDeviceName)) return;
+        if (!Microphone.IsRecording(_micDeviceName)) return;
 
         _timer += Time.deltaTime;
         if (_timer < chunkIntervalSeconds) return;
@@ -65,49 +94,62 @@ public class AudioBridge : MonoBehaviour
         ReadAndSendChunk();
     }
 
+    private void TryLateDetect()
+    {
+        var lipSyncMic = FindObjectOfType<uLipSync.uLipSyncMicrophone>();
+        if (lipSyncMic == null || !lipSyncMic.isRecording) return;
+
+        var audioSource = lipSyncMic.GetComponent<AudioSource>();
+        if (audioSource == null || audioSource.clip == null) return;
+
+        _micClip = audioSource.clip;
+        _micDeviceName = lipSyncMic.device.name;
+        _lastReadPos = Microphone.GetPosition(_micDeviceName);
+        _ready = true;
+
+        Debug.Log($"[AudioBridge] 遅延検出成功: {_micDeviceName}, clip={_micClip.frequency}Hz {_micClip.channels}ch");
+    }
+
     private void ReadAndSendChunk()
     {
-        var clip = sourceAudioSource.clip;
-        if (clip == null) return;
-
-        int currentPos = sourceAudioSource.timeSamples;
-        if (currentPos == _lastReadPos) return;
+        int micPos = Microphone.GetPosition(_micDeviceName);
+        if (micPos == _lastReadPos) return;
 
         int sampleCount;
-        if (currentPos > _lastReadPos)
+        if (micPos > _lastReadPos)
         {
-            sampleCount = currentPos - _lastReadPos;
+            sampleCount = micPos - _lastReadPos;
         }
         else
         {
-            //  ループ時
-            sampleCount = (clip.samples - _lastReadPos) + currentPos;
+            //  リングバッファ一周
+            sampleCount = (_micClip.samples - _lastReadPos) + micPos;
         }
 
         if (sampleCount <= 0) return;
 
-        float[] data = new float[sampleCount * clip.channels];
-        clip.GetData(data, _lastReadPos);
-        _lastReadPos = currentPos;
+        float[] data = new float[sampleCount * _micClip.channels];
+        _micClip.GetData(data, _lastReadPos);
+        _lastReadPos = micPos;
 
         var chunk = new AudioChunk
         {
             Data = data,
-            Frequency = clip.frequency,
-            Channels = clip.channels,
-            Length = (float)sampleCount / clip.frequency,
+            Frequency = _micClip.frequency,
+            Channels = _micClip.channels,
+            Length = (float)sampleCount / _micClip.frequency,
             IsVoiceDetected = true
         };
 
-        _onChunkReady.Invoke(chunk);
+        _onChunkReady?.Invoke(chunk);
     }
 
-    /// <summary>
-    /// 読み取り位置をリセット
-    /// </summary>
     public void ResetPosition()
     {
-        _lastReadPos = 0;
+        if (!string.IsNullOrEmpty(_micDeviceName) && Microphone.IsRecording(_micDeviceName))
+            _lastReadPos = Microphone.GetPosition(_micDeviceName);
+        else
+            _lastReadPos = 0;
         _timer = 0f;
     }
 }

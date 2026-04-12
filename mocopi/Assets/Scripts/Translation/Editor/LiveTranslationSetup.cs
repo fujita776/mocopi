@@ -6,10 +6,12 @@ using Whisper;
 
 /// <summary>
 /// ライブ翻訳システムを現在のシーンにセットアップするエディタツール
-/// メニュー: GameObject > Live Translation > Setup In Scene
+/// 設定はLiveTranslationSettings（ScriptableObject）から読み込む
 /// </summary>
 public class LiveTranslationSetup
 {
+    private const string SettingsPath = "Assets/Scripts/Translation/LiveTranslationSettings.asset";
+
     [MenuItem("GameObject/Live Translation/Setup In Scene")]
     public static void SetupInScene()
     {
@@ -19,6 +21,17 @@ public class LiveTranslationSetup
             return;
         }
 
+        //  ScriptableObject読み込み
+        var settings = AssetDatabase.LoadAssetAtPath<LiveTranslationSettings>(SettingsPath);
+        if (settings == null)
+        {
+            //  存在しなければ作成
+            settings = ScriptableObject.CreateInstance<LiveTranslationSettings>();
+            AssetDatabase.CreateAsset(settings, SettingsPath);
+            AssetDatabase.SaveAssets();
+            Debug.Log($"[LiveTranslationSetup] 設定アセットを作成: {SettingsPath}");
+        }
+
         //  メインオブジェクト作成
         var managerObj = new GameObject("TranslationManager");
         Undo.RegisterCreatedObjectUndo(managerObj, "Setup Live Translation");
@@ -26,6 +39,24 @@ public class LiveTranslationSetup
         var whisperManager = managerObj.AddComponent<WhisperManager>();
         var audioBridge = managerObj.AddComponent<AudioBridge>();
         var manager = managerObj.AddComponent<LiveTranslationManager>();
+
+        //  WhisperManager のprivateフィールドをSettingsから設定
+        SetField(whisperManager, "modelPath", settings.modelPath);
+        SetField(whisperManager, "isModelPathInStreamingAssets", settings.isModelPathInStreamingAssets);
+        SetField(whisperManager, "useGpu", settings.useGpu);
+        SetField(whisperManager, "flashAttention", settings.flashAttention);
+
+        //  publicフィールドはSettingsから直接
+        whisperManager.noContext = settings.noContext;
+        whisperManager.useVad = settings.useVad;
+        whisperManager.dropOldBuffer = settings.dropOldBuffer;
+        whisperManager.stepSec = settings.stepSec;
+        whisperManager.keepSec = settings.keepSec;
+        whisperManager.lengthSec = settings.lengthSec;
+        whisperManager.updatePrompt = settings.updatePrompt;
+
+        //  AudioBridge設定
+        SetField(audioBridge, "chunkIntervalSeconds", settings.chunkIntervalSeconds);
 
         //  字幕専用Canvas
         var canvasObj = new GameObject("SubtitleCanvas");
@@ -63,46 +94,40 @@ public class LiveTranslationSetup
 
         var tmpText = textObj.AddComponent<TextMeshProUGUI>();
         tmpText.text = "";
-        tmpText.fontSize = 32;
+        tmpText.fontSize = settings.fontSize;
         tmpText.alignment = TextAlignmentOptions.Center;
         tmpText.color = Color.white;
         tmpText.enableWordWrapping = true;
 
-        //  日本語対応フォント適用
-        var jaFont = AssetDatabase.LoadAssetAtPath<TMPro.TMP_FontAsset>("Assets/font/nikumaru SDF.asset");
+        var jaFont = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>("Assets/font/nikumaru SDF.asset");
         if (jaFont != null)
-        {
             tmpText.font = jaFont;
-        }
         else
-        {
-            Debug.LogWarning("[LiveTranslationSetup] nikumaru SDF.asset が見つかりません。日本語表示時に文字化けする可能性があります");
-        }
+            Debug.LogWarning("[LiveTranslationSetup] nikumaru SDF.asset が見つかりません");
 
         var subtitleUI = panelObj.AddComponent<SubtitleUI>();
+        SetField(subtitleUI, "fadeDuration", settings.fadeDuration);
+        SetField(subtitleUI, "displayDuration", settings.displayDuration);
         Undo.RegisterCreatedObjectUndo(panelObj, "Create Subtitle Panel");
 
         //  参照を設定
-        SetPrivateField(subtitleUI, "subtitleText", tmpText);
-        SetPrivateField(subtitleUI, "backgroundPanel", panelImage);
+        SetField(subtitleUI, "subtitleText", tmpText);
+        SetField(subtitleUI, "backgroundPanel", panelImage);
 
-        SetPrivateField(manager, "whisperManager", whisperManager);
-        SetPrivateField(manager, "audioBridge", audioBridge);
-        SetPrivateField(manager, "subtitleUI", subtitleUI);
-
-        //  WhisperManager のモデルパス設定（smallモデル）
-        SetPrivateField(whisperManager, "modelPath", "ggml-small.bin");
-        SetPrivateField(whisperManager, "isModelPathInStreamingAssets", true);
+        SetField(manager, "settings", settings);
+        SetField(manager, "whisperManager", whisperManager);
+        SetField(manager, "audioBridge", audioBridge);
+        SetField(manager, "subtitleUI", subtitleUI);
 
         Selection.activeGameObject = managerObj;
+        EditorUtility.SetDirty(managerObj);
 
         Debug.Log("[LiveTranslationSetup] セットアップ完了");
         EditorUtility.DisplayDialog("Live Translation",
             "セットアップ完了\n\n" +
-            "モデル: ggml-small.bin (StreamingAssets)\n" +
-            "F1: 字幕ON/OFF\n" +
-            "F2: 翻訳ON/OFF（英語/日本語切替）\n\n" +
-            "AudioBridgeは実行時にuLipSyncMicrophoneのAudioSourceを自動検出します。",
+            $"設定: {SettingsPath}\n" +
+            "全シーンで同じ設定アセットを参照します。\n" +
+            "設定変更はアセットを1つ編集するだけでOK。",
             "OK");
     }
 
@@ -128,36 +153,39 @@ public class LiveTranslationSetup
         Debug.Log("[LiveTranslationSetup] 翻訳システムを削除しました");
     }
 
-    private static void SetPrivateField(Object target, string fieldName, Object value)
+    //  ヘルパー: SerializedObject経由でprivateフィールドを設定
+    private static void SetField(Object target, string fieldName, Object value)
     {
         var so = new SerializedObject(target);
         var prop = so.FindProperty(fieldName);
-        if (prop != null)
-        {
-            prop.objectReferenceValue = value;
-            so.ApplyModifiedProperties();
-        }
+        if (prop != null) { prop.objectReferenceValue = value; so.ApplyModifiedProperties(); }
     }
 
-    private static void SetPrivateField(Object target, string fieldName, string value)
+    private static void SetField(Object target, string fieldName, string value)
     {
         var so = new SerializedObject(target);
         var prop = so.FindProperty(fieldName);
-        if (prop != null)
-        {
-            prop.stringValue = value;
-            so.ApplyModifiedProperties();
-        }
+        if (prop != null) { prop.stringValue = value; so.ApplyModifiedProperties(); }
     }
 
-    private static void SetPrivateField(Object target, string fieldName, bool value)
+    private static void SetField(Object target, string fieldName, bool value)
     {
         var so = new SerializedObject(target);
         var prop = so.FindProperty(fieldName);
-        if (prop != null)
-        {
-            prop.boolValue = value;
-            so.ApplyModifiedProperties();
-        }
+        if (prop != null) { prop.boolValue = value; so.ApplyModifiedProperties(); }
+    }
+
+    private static void SetField(Object target, string fieldName, float value)
+    {
+        var so = new SerializedObject(target);
+        var prop = so.FindProperty(fieldName);
+        if (prop != null) { prop.floatValue = value; so.ApplyModifiedProperties(); }
+    }
+
+    private static void SetField(Object target, string fieldName, int value)
+    {
+        var so = new SerializedObject(target);
+        var prop = so.FindProperty(fieldName);
+        if (prop != null) { prop.intValue = value; so.ApplyModifiedProperties(); }
     }
 }

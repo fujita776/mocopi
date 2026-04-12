@@ -84,10 +84,3 @@ mocopi/Assets/font/*.asset
 
 # Whisper ggmlモデル（大容量 - Dropboxで共有）
 mocopi/Assets/StreamingAssets/ggml-*.bin
-
-# モデルエクスポート作業ディレクトリ
-whisper-tiny/
-opus-mt-ja-en/
-
-# デバッグ用WAV
-debug_chunk_*.wav
