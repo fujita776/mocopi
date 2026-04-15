@@ -1,24 +1,24 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
 public class HeightUI2D : MonoBehaviour
 {
-    [Header("HeightMeter2D‚ÌQÆ‚ğw’è‚·‚é")]
+    [Header("HeightMeter2Dã®å‚ç…§ã‚’æŒ‡å®šã™ã‚‹")]
     [SerializeField] private HeightMeter2D meter;
 
-    [Header("‚‚³•\¦—pTextMeshProUGUI‚ÌQÆ‚ğw’è‚·‚é")]
-    [Header("Œ»İ‚Ì‚‚³‚ğ•\¦‚·‚éTextMeshProUGUIƒRƒ“ƒ|[ƒlƒ“ƒg")]
+    [Header("é«˜ã•è¡¨ç¤ºç”¨TextMeshProUGUIã®å‚ç…§ã‚’æŒ‡å®šã™ã‚‹")]
+    [Header("ç¾åœ¨ã®é«˜ã•ã‚’è¡¨ç¤ºã™ã‚‹TextMeshProUGUIã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆ")]
     [SerializeField] private TextMeshProUGUI[] currentHeightTexts;
-    [Header("ƒV[ƒPƒ“ƒX’†‚ÌÅ‚“’B‚‚³‚ğ•\¦‚·‚éTextMeshProUGUIƒRƒ“ƒ|[ƒlƒ“ƒg")]
+    [Header("ã‚·ãƒ¼ã‚±ãƒ³ã‚¹ä¸­ã®æœ€é«˜åˆ°é”é«˜ã•ã‚’è¡¨ç¤ºã™ã‚‹TextMeshProUGUIã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆ")]
     [SerializeField] private TextMeshProUGUI maxHeightText;
 
 
-    [Header("•\¦ƒtƒH[ƒ}ƒbƒg‚Ìİ’è")]
-    [SerializeField] private int decimalPlaces = 1;  //  ¬”“_ˆÈ‰º‚ÌŒ…”
+    [Header("è¡¨ç¤ºãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã®è¨­å®š")]
+    [SerializeField] private int decimalPlaces = 1;  //  å°æ•°ç‚¹ä»¥ä¸‹ã®æ¡æ•°
 
-    [Header("cm‚É•ÏŠ·‚·‚é‚½‚ß‚Ì”{—¦")]
+    [Header("cmã«å¤‰æ›ã™ã‚‹ãŸã‚ã®å€ç‡")]
     [SerializeField] private float cmPerUnit = 12f;
 
     private void Awake()
@@ -33,7 +33,7 @@ public class HeightUI2D : MonoBehaviour
             return;
         meter.OnHeightChanged += UpdateCurrentText;
         meter.OnMaxHeightUpdated += UpdateMaxText;
-        //  ‰Šú•\¦‚ÌXV
+        //  åˆæœŸè¡¨ç¤ºã®æ›´æ–°
         UpdateCurrentText(meter.CurrentHeight);
         UpdateMaxText(meter.MaxHeight);
     }

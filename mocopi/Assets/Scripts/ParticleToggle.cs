@@ -1,23 +1,23 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class ParticleToggle : MonoBehaviour
 {
-    [Header("Ø‚è‘Ö‚¦‚Ég‚¤ƒL[")]
+    [Header("åˆ‡ã‚Šæ›¿ãˆã«ä½¿ã†ã‚­ãƒ¼")]
     [SerializeField] private KeyCode key = KeyCode.H;
 
-    [Header("‘€ì‚·‚éParticleSystem")]
+    [Header("æ“ä½œã™ã‚‹ParticleSystem")]
     [SerializeField] private ParticleSystem pSystem;
 
-    //  Ä¶‚µ‚Ä‚¢‚é‚©‚Ç‚¤‚©‚Ìƒtƒ‰ƒO
+    //  å†ç”Ÿã—ã¦ã„ã‚‹ã‹ã©ã†ã‹ã®ãƒ•ãƒ©ã‚°
     private bool isOn = false;
 
     void Awake()
     {
         if(pSystem == null)
         {
-            Debug.LogError("‘€ì‚·‚éParticleSystem‚ªƒAƒ^ƒbƒ`‚³‚ê‚Ä‚¢‚Ü‚¹‚ñ");
+            Debug.LogError("æ“ä½œã™ã‚‹ParticleSystemãŒã‚¢ã‚¿ãƒƒãƒã•ã‚Œã¦ã„ã¾ã›ã‚“");
         }
     }
 
@@ -32,8 +32,8 @@ public class ParticleToggle : MonoBehaviour
         {
             isOn = !isOn;
             if(isOn)
-                pSystem.Play();  //  Ä¶‚·‚é
-            else  //  Ä¶‚ğ~‚ß‚é
+                pSystem.Play();  //  å†ç”Ÿã™ã‚‹
+            else  //  å†ç”Ÿã‚’æ­¢ã‚ã‚‹
                 pSystem.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
 
         }

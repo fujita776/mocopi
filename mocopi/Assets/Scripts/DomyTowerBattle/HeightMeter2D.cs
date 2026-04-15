@@ -1,65 +1,65 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class HeightMeter2D : MonoBehaviour
 {
-    [Header("‘ÎÛ‚ÌTowerPieceSpawner‚ğw’è‚·‚é")]
+    [Header("å¯¾è±¡ã®TowerPieceSpawnerã‚’æŒ‡å®šã™ã‚‹")]
     [SerializeField] private TowerPieceSpawner spaner;
 
-    [Header("°‚Ì‚‚³(YÀ•W)‚ğw’è‚·‚é")]
+    [Header("åºŠã®é«˜ã•(Yåº§æ¨™)ã‚’æŒ‡å®šã™ã‚‹")]
     [SerializeField] private Transform floorTransform;
 
-    //  Œ»İ‚Ì‚‚³‚ğæ“¾‚·‚é
+    //  ç¾åœ¨ã®é«˜ã•ã‚’å–å¾—ã™ã‚‹
     public float CurrentHeight { get; private set; } = 0f;
 
-    //  Å‚“’B‚³‚ê‚½‚‚³‚ğæ“¾‚·‚é
+    //  æœ€é«˜åˆ°é”ã•ã‚ŒãŸé«˜ã•ã‚’å–å¾—ã™ã‚‹
     public float MaxHeight { get; private set; } = 0f;
 
-    //  Œ»İ‚Ì‚‚³‚ª•Ï‰»‚µ‚½‚Ì’Ê’mƒCƒxƒ“ƒg
+    //  ç¾åœ¨ã®é«˜ã•ãŒå¤‰åŒ–ã—ãŸæ™‚ã®é€šçŸ¥ã‚¤ãƒ™ãƒ³ãƒˆ
     public event Action<float> OnHeightChanged;
 
-    //  ƒQ[ƒ€‹N“®’†‚ÌÅ‚“’B‚³‚ê‚½‚‚³‚ªXV‚³‚ê‚½‚Ì’Ê’mƒCƒxƒ“ƒg
+    //  ã‚²ãƒ¼ãƒ èµ·å‹•ä¸­ã®æœ€é«˜åˆ°é”ã•ã‚ŒãŸé«˜ã•ãŒæ›´æ–°ã•ã‚ŒãŸæ™‚ã®é€šçŸ¥ã‚¤ãƒ™ãƒ³ãƒˆ
     public event Action<float> OnMaxHeightUpdated;
 
-    //  ŠO•”‚©‚çÅ‚“’B‚³‚ê‚½‚‚³‚ğXV‚·‚é
+    //  å¤–éƒ¨ã‹ã‚‰æœ€é«˜åˆ°é”ã•ã‚ŒãŸé«˜ã•ã‚’æ›´æ–°ã™ã‚‹
     public void InitializeMax(float value)
     {
         MaxHeight = Mathf.Max(0f, value);
         OnMaxHeightUpdated?.Invoke(MaxHeight);
     }
 
-    //  ‚‚³‚ğÄŒv‘ª‚·‚é
+    //  é«˜ã•ã‚’å†è¨ˆæ¸¬ã™ã‚‹
     public void MeasureNow() => Recalc();
 
     private void Recalc()
     {
         if (!spaner || !spaner.SpawnParent)
         {
-            Debug.LogWarning("HeightMeter2D: TowerPieceSpawner‚ªİ’è‚³‚ê‚Ä‚¢‚Ü‚¹‚ñB");
+            Debug.LogWarning("HeightMeter2D: TowerPieceSpawnerãŒè¨­å®šã•ã‚Œã¦ã„ã¾ã›ã‚“ã€‚");
             return;
         }
         if (!floorTransform)
         {
-            Debug.LogWarning("HeightMeter2D: °‚ÌTransform‚ªİ’è‚³‚ê‚Ä‚¢‚Ü‚¹‚ñB");
+            Debug.LogWarning("HeightMeter2D: åºŠã®TransformãŒè¨­å®šã•ã‚Œã¦ã„ã¾ã›ã‚“ã€‚");
             return;
         }
 
-        var parent = spaner.SpawnParent;  //  ƒXƒ|[ƒ“‚³‚ê‚½ƒp[ƒc‚ÌeƒIƒuƒWƒFƒNƒg
-        float floorY = floorTransform.position.y;  //  °‚ÌYÀ•W
+        var parent = spaner.SpawnParent;  //  ã‚¹ãƒãƒ¼ãƒ³ã•ã‚ŒãŸãƒ‘ãƒ¼ãƒ„ã®è¦ªã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+        float floorY = floorTransform.position.y;  //  åºŠã®Yåº§æ¨™
 
-        float topY = float.NegativeInfinity;  //  ƒp[ƒc‚Ì’†‚Åˆê”Ôã‚ÌYÀ•W
-        bool foundAny = false;  //  ƒp[ƒc‚ªˆê‚Â‚Å‚àŒ©‚Â‚©‚Á‚½‚©‚Ç‚¤‚©
+        float topY = float.NegativeInfinity;  //  ãƒ‘ãƒ¼ãƒ„ã®ä¸­ã§ä¸€ç•ªä¸Šã®Yåº§æ¨™
+        bool foundAny = false;  //  ãƒ‘ãƒ¼ãƒ„ãŒä¸€ã¤ã§ã‚‚è¦‹ã¤ã‹ã£ãŸã‹ã©ã†ã‹
 
-        //   eƒIƒuƒWƒFƒNƒgˆÈ‰º‚Ì‘S‚Ä‚ÌDorppablePiece‚ğ’²‚×‚é
+        //   è¦ªã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆä»¥ä¸‹ã®å…¨ã¦ã®DorppablePieceã‚’èª¿ã¹ã‚‹
         var pieces = parent.GetComponentsInChildren<DroppablePiece>(includeInactive: false);
-        //  Šeƒp[ƒc‚ÌƒRƒ‰ƒCƒ_[‚©‚çˆê”Ôã‚ÌYÀ•W‚ğæ“¾‚·‚é
+        //  å„ãƒ‘ãƒ¼ãƒ„ã®ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ã‹ã‚‰ä¸€ç•ªä¸Šã®Yåº§æ¨™ã‚’å–å¾—ã™ã‚‹
         foreach (var piece in pieces)
         {
-            if (!piece.isActiveAndEnabled) continue;  //  –³Œø‰»‚³‚ê‚Ä‚¢‚é‚à‚Ì‚Í–³‹‚·‚é
+            if (!piece.isActiveAndEnabled) continue;  //  ç„¡åŠ¹åŒ–ã•ã‚Œã¦ã„ã‚‹ã‚‚ã®ã¯ç„¡è¦–ã™ã‚‹
 
-            //  ƒp[ƒc‚ÌƒRƒ‰ƒCƒ_[‚©‚çˆê”Ôã‚ÌYÀ•W‚ğæ“¾‚·‚é
+            //  ãƒ‘ãƒ¼ãƒ„ã®ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ã‹ã‚‰ä¸€ç•ªä¸Šã®Yåº§æ¨™ã‚’å–å¾—ã™ã‚‹
             if (TryGetTopYFromColliders(piece.transform, out float y))
             {
                 if (y > topY) topY = y;
@@ -67,9 +67,9 @@ public class HeightMeter2D : MonoBehaviour
             }
         }
 
-        //  V‚µ‚¢‚‚³‚ğŒvZ‚·‚é
+        //  æ–°ã—ã„é«˜ã•ã‚’è¨ˆç®—ã™ã‚‹
         float newHeight = foundAny ? Mathf.Max(0f, topY - floorY) : 0f;
-        //   Å‚“’B‚‚³‚ÌXV
+        //   æœ€é«˜åˆ°é”é«˜ã•ã®æ›´æ–°
         if (!Mathf.Approximately(newHeight, CurrentHeight))
         {
             CurrentHeight = newHeight;
@@ -82,7 +82,7 @@ public class HeightMeter2D : MonoBehaviour
         }
     }
 
-    //  w’è‚µ‚½TransformˆÈ‰º‚ÌCollider2DŒQ‚©‚çˆê”Ôã‚ÌYÀ•W‚ğæ“¾‚·‚é
+    //  æŒ‡å®šã—ãŸTransformä»¥ä¸‹ã®Collider2Dç¾¤ã‹ã‚‰ä¸€ç•ªä¸Šã®Yåº§æ¨™ã‚’å–å¾—ã™ã‚‹
     private static bool TryGetTopYFromColliders(Transform root, out float topY)
     {
         topY = float.NegativeInfinity;

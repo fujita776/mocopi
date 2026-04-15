@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -12,7 +12,7 @@ public class FoodScore : MonoBehaviour
 
     private void Awake()
     {
-        // ƒVƒ“ƒOƒ‹ƒgƒ““I‚Éˆµ‚¤
+        // ã‚·ãƒ³ã‚°ãƒ«ãƒˆãƒ³çš„ã«æ‰±ã†
         if (Instance == null)
         {
             Instance = this;
@@ -24,9 +24,9 @@ public class FoodScore : MonoBehaviour
     }
 
     /// <summary>
-    /// FoodType ‚É‰‚¶‚ÄƒXƒRƒA‚ğ‰ÁZ
+    /// FoodType ã«å¿œã˜ã¦ã‚¹ã‚³ã‚¢ã‚’åŠ ç®—
     /// </summary>
-    /// <param name="type">ƒh[ƒiƒc or –ìØ</param>
+    /// <param name="type">ãƒ‰ãƒ¼ãƒŠãƒ„ or é‡èœ</param>
     public void AddCount(FoodType type)
     {
         switch (type)

@@ -1,15 +1,15 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class CaptureTriggerInputSystem : MonoBehaviour
 {
-    [Header("2DƒIƒuƒWƒFƒNƒg¶¬ƒ}ƒl[ƒWƒƒ[")]
+    [Header("2Dã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆç”Ÿæˆãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼")]
     [SerializeField] private CaptureAndCreate2DObject captureManager;
     public bool waitCapcture = false;
 
-    [Header("ƒs[ƒX‚ğˆÚ“®‚·‚éƒRƒ“ƒgƒ[ƒ‰[(current•”•ª‚ğ©“®‚ÅƒZƒbƒg‚³‚¹‚é‚½‚ß)")]
+    [Header("ãƒ”ãƒ¼ã‚¹ã‚’ç§»å‹•ã™ã‚‹ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼(currentéƒ¨åˆ†ã‚’è‡ªå‹•ã§ã‚»ãƒƒãƒˆã•ã›ã‚‹ãŸã‚)")]
     [SerializeField] private PieceInputController pieceInputController;
 
     private TowerGameControls gameControls;
@@ -50,14 +50,14 @@ public class CaptureTriggerInputSystem : MonoBehaviour
 
         }
         else
-            Debug.LogWarning("captureManager‚ª‚ ‚è‚Ü‚¹‚ñB");
+            Debug.LogWarning("captureManagerãŒã‚ã‚Šã¾ã›ã‚“ã€‚");
 
     }
 
-    // ƒs[ƒX¶¬‚ÉŒÄ‚Î‚ê‚é
+    // ãƒ”ãƒ¼ã‚¹ç”Ÿæˆæ™‚ã«å‘¼ã°ã‚Œã‚‹
     private void HandlePieceCreated(DroppablePiece drop)
     {
-        // ©“®‚ÅPieceInputController‚Ìcurrent‚ÉƒZƒbƒg‚·‚é
+        // è‡ªå‹•ã§PieceInputControllerã®currentã«ã‚»ãƒƒãƒˆã™ã‚‹
         if (pieceInputController != null && drop != null)
             pieceInputController.SetCurrent(drop);
     }

@@ -1,20 +1,20 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class BoxPlayerMove : MonoBehaviour
 {
-    [Header("ˆÚ“®İ’è")]
-    [Tooltip("ˆÚ“®‘¬“xi’PˆÊ: ƒ†ƒjƒbƒg/•bj")]
+    [Header("ç§»å‹•è¨­å®š")]
+    [Tooltip("ç§»å‹•é€Ÿåº¦ï¼ˆå˜ä½: ãƒ¦ãƒ‹ãƒƒãƒˆ/ç§’ï¼‰")]
     [SerializeField] private float moveSpeed = 5f;
-    [Tooltip("X²‚ÌÅ¬’l")]
+    [Tooltip("Xè»¸ã®æœ€å°å€¤")]
     [SerializeField] private float minX = -5f;
-    [Tooltip("X²‚ÌÅ‘å’l")]
+    [Tooltip("Xè»¸ã®æœ€å¤§å€¤")]
     [SerializeField] private float maxX = 5f;
 
 
-    //  ©“®¶¬‚³‚ê‚½Input ActionƒNƒ‰ƒX‚ÌƒCƒ“ƒXƒ^ƒ“ƒX
+    //  è‡ªå‹•ç”Ÿæˆã•ã‚ŒãŸInput Actionã‚¯ãƒ©ã‚¹ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹
     private PlayerInputSystem movementAction;
 
     private void Awake()
@@ -24,7 +24,7 @@ public class BoxPlayerMove : MonoBehaviour
 
     private void OnEnable()
     {
-        //  •K—v‚ÈƒAƒNƒVƒ‡ƒ“ƒ}ƒbƒv‚ğ—LŒø‰»
+        //  å¿…è¦ãªã‚¢ã‚¯ã‚·ãƒ§ãƒ³ãƒãƒƒãƒ—ã‚’æœ‰åŠ¹åŒ–
         movementAction.PlayerBoxMove.Enable();
     }
 
@@ -36,14 +36,14 @@ public class BoxPlayerMove : MonoBehaviour
 
     void Update()
     {
-        //  MoveƒAƒNƒVƒ‡ƒ“‚Ì“ü—Í’l‚ğæ“¾‚µAX¬•ª‚ğ—˜—p
+        //  Moveã‚¢ã‚¯ã‚·ãƒ§ãƒ³ã®å…¥åŠ›å€¤ã‚’å–å¾—ã—ã€Xæˆåˆ†ã‚’åˆ©ç”¨
         Vector2 input = movementAction.PlayerBoxMove.Move.ReadValue<Vector2>();
         float horizontal = input.x;
 
-        //  “ü—Í‚ÉŠî‚Ã‚¢‚ÄˆÚ“®—Ê‚ğŒvZ
+        //  å…¥åŠ›ã«åŸºã¥ã„ã¦ç§»å‹•é‡ã‚’è¨ˆç®—
         Vector3 movement = new Vector3(horizontal * moveSpeed * Time.deltaTime, 0f, 0f);
 
-        //  Œ»İ‚ÌˆÊ’u‚ÉˆÚ“®—Ê‚ğ‰ÁZ
+        //  ç¾åœ¨ã®ä½ç½®ã«ç§»å‹•é‡ã‚’åŠ ç®—
         transform.position += movement;
 
         float clampedX = Mathf.Clamp(transform.position.x, minX, maxX);

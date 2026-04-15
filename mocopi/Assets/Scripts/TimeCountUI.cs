@@ -1,55 +1,55 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
 public class TimeCountUI : MonoBehaviour
 {
-    [Header("§ŒÀŠÔ")]
+    [Header("åˆ¶é™æ™‚é–“")]
     [SerializeField] private float timeLimitSeconds = 60f;
 
-    [Header("§ŒÀŠÔ‚ğ•\¦‚·‚éUI")]
+    [Header("åˆ¶é™æ™‚é–“ã‚’è¡¨ç¤ºã™ã‚‹UI")]
     [SerializeField] private TextMeshProUGUI timeCount;
 
-    [Header("ŠÔØ‚ê‚µ‚½Œã‚É”ñ•\¦‚É‚·‚éCanvas")]
+    [Header("æ™‚é–“åˆ‡ã‚Œã—ãŸå¾Œã«éè¡¨ç¤ºã«ã™ã‚‹Canvas")]
     [SerializeField] private GameObject currentCanvas;
 
-    [Header("ŠÔØ‚ê‚µ‚½Œã‚É•\¦‚·‚éCanvas")]
+    [Header("æ™‚é–“åˆ‡ã‚Œã—ãŸå¾Œã«è¡¨ç¤ºã™ã‚‹Canvas")]
     [SerializeField] private GameObject nextCanvas;
 
-    [Header("ŠJn‚É–Â‚ç‚·‰¹")]
+    [Header("é–‹å§‹æ™‚ã«é³´ã‚‰ã™éŸ³")]
     [SerializeField] private AudioClip startClip;
 
-    [Header("ŠÔØ‚ê‚É–Â‚ç‚·‰¹")]
+    [Header("æ™‚é–“åˆ‡ã‚Œæ™‚ã«é³´ã‚‰ã™éŸ³")]
     [SerializeField] private AudioClip endClip;
 
-    [Header("Œø‰Ê‰¹Ä¶—p‚ÌAudioSource")]
+    [Header("åŠ¹æœéŸ³å†ç”Ÿç”¨ã®AudioSource")]
     [SerializeField] private AudioSource audioSource;
 
-    [Header("ƒQ[ƒ€ŠJn‚ÌƒL[")]
+    [Header("ã‚²ãƒ¼ãƒ é–‹å§‹ã®ã‚­ãƒ¼")]
     [SerializeField] private KeyCode startKey = KeyCode.K;
 
-    private float remainTime;  //  c‚èŠÔ
-    private bool isMeasuring;  //  Œv‘ª’†
-    private bool hasStarted;  //  ŠJn‚µ‚½‚©‚Ç‚¤‚©
+    private float remainTime;  //  æ®‹ã‚Šæ™‚é–“
+    private bool isMeasuring;  //  è¨ˆæ¸¬ä¸­
+    private bool hasStarted;  //  é–‹å§‹ã—ãŸã‹ã©ã†ã‹
 
     void Start()
     {
         if(currentCanvas == null)
         {
-            Debug.LogError("TimeCountUIƒXƒNƒŠƒvƒg‚ÉAcurrentCanvas‚ªƒAƒ^ƒbƒ`‚³‚ê‚Ä‚¢‚Ü‚¹‚ñB", this);
-            enabled = false;  //  Update‚È‚Ç‚Ìˆ—‚ª~‚Ü‚é
+            Debug.LogError("TimeCountUIã‚¹ã‚¯ãƒªãƒ—ãƒˆã«ã€currentCanvasãŒã‚¢ã‚¿ãƒƒãƒã•ã‚Œã¦ã„ã¾ã›ã‚“ã€‚", this);
+            enabled = false;  //  Updateãªã©ã®å‡¦ç†ãŒæ­¢ã¾ã‚‹
             return;
         }
         if(nextCanvas == null)
         {
-            Debug.LogError("TimeCountUIƒXƒNƒŠƒvƒg‚ÉAnextCanvas‚ªƒAƒ^ƒbƒ`‚³‚ê‚Ä‚¢‚Ü‚¹‚ñB", this);
-            enabled = false;  //  Update‚È‚Ç‚Ìˆ—‚ª~‚Ü‚é
+            Debug.LogError("TimeCountUIã‚¹ã‚¯ãƒªãƒ—ãƒˆã«ã€nextCanvasãŒã‚¢ã‚¿ãƒƒãƒã•ã‚Œã¦ã„ã¾ã›ã‚“ã€‚", this);
+            enabled = false;  //  Updateãªã©ã®å‡¦ç†ãŒæ­¢ã¾ã‚‹
             return;
         }
         if (audioSource == null)
         {
-            Debug.LogError("TimeCountUIƒXƒNƒŠƒvƒg‚ÉAaudioSource‚ªƒAƒ^ƒbƒ`‚³‚ê‚Ä‚¢‚Ü‚¹‚ñBB", this);
+            Debug.LogError("TimeCountUIã‚¹ã‚¯ãƒªãƒ—ãƒˆã«ã€audioSourceãŒã‚¢ã‚¿ãƒƒãƒã•ã‚Œã¦ã„ã¾ã›ã‚“ã€‚", this);
             enabled = false;
             return;
         }
@@ -63,13 +63,13 @@ public class TimeCountUI : MonoBehaviour
 
     void Update()
     {
-        //  ŠJn‚µ‚Ä‚¢‚È‚¢‚ÉAƒQ[ƒ€ŠJnƒL[‚ª‰Ÿ‚³‚ê‚½‚çn‚ß‚é
+        //  é–‹å§‹ã—ã¦ã„ãªã„æ™‚ã«ã€ã‚²ãƒ¼ãƒ é–‹å§‹ã‚­ãƒ¼ãŒæŠ¼ã•ã‚ŒãŸã‚‰å§‹ã‚ã‚‹
         if(!hasStarted && Input.GetKeyDown(startKey))
         {
             hasStarted = true;
             isMeasuring = true;
 
-            //  ŠJn‚ÌƒTƒEƒ“ƒhÄ¶
+            //  é–‹å§‹æ™‚ã®ã‚µã‚¦ãƒ³ãƒ‰å†ç”Ÿ
             if (startClip != null)
             {
                 audioSource.PlayOneShot(startClip);
@@ -97,12 +97,12 @@ public class TimeCountUI : MonoBehaviour
     }
 
     ///  <summary>
-    ///  ŠÔØ‚ê‚µ‚½‚Ìˆ—
-    ///  currentCanvas‚ğ”ñ•\¦‚É‚µ‚ÄAnextCanvas‚ğ•\¦‚·‚é
+    ///  æ™‚é–“åˆ‡ã‚Œã—ãŸæ™‚ã®å‡¦ç†
+    ///  currentCanvasã‚’éè¡¨ç¤ºã«ã—ã¦ã€nextCanvasã‚’è¡¨ç¤ºã™ã‚‹
     ///  </summary>
     private void OnTimeUp()
     {
-        // I—¹‚ÌƒTƒEƒ“ƒhÄ¶
+        // çµ‚äº†æ™‚ã®ã‚µã‚¦ãƒ³ãƒ‰å†ç”Ÿ
         if (endClip != null)
         {
             audioSource.PlayOneShot(endClip);
@@ -110,7 +110,7 @@ public class TimeCountUI : MonoBehaviour
 
         nextCanvas.SetActive(true);
         currentCanvas.SetActive(false);
-        //  Update‚ğ~‚ß‚é
+        //  Updateã‚’æ­¢ã‚ã‚‹
         enabled = false;
     }
 

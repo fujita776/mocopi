@@ -1,108 +1,108 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
 public class TowerPieceSpawner : MonoBehaviour
 {
-    [Header("¶¬•¨‚Ìe")]
+    [Header("ç”Ÿæˆç‰©ã®è¦ª")]
     [SerializeField] private Transform spawnParent;
 
-    [Header("ƒs[ƒX”‚ÌƒJƒEƒ“ƒg—pƒRƒ“ƒ|[ƒlƒ“ƒg")]
+    [Header("ãƒ”ãƒ¼ã‚¹æ•°ã®ã‚«ã‚¦ãƒ³ãƒˆç”¨ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆ")]
     [SerializeField] private PieceCounter pieceCounter;
 
-    [Header("¶¬ˆÊ’u‚ÌŠî€À•W")]
+    [Header("ç”Ÿæˆä½ç½®ã®åŸºæº–åº§æ¨™")]
     [SerializeField] private Vector3 spawnPosition = Vector3.zero;
 
-    [Header("Šî€ˆÊ’u‚©‚ç‚Ç‚ê‚¾‚¯ã‚Éo‚·‚©")]
+    [Header("åŸºæº–ä½ç½®ã‹ã‚‰ã©ã‚Œã ã‘ä¸Šã«å‡ºã™ã‹")]
     [SerializeField] private float spawnHeight = 5f;
 
-    [Header("SpriteRenderer‚Ì•`‰æ‡")]
+    [Header("SpriteRendererã®æç”»é †")]
     [SerializeField] private int sortingOrder = 100;
 
-    [Header("SortingLayer‚Ì–¼‘O")]
+    [Header("SortingLayerã®åå‰")]
     [SerializeField] private string sortingLayerName = "";
 
-    [Header("—‰º’†‚Ìd—Í‚Ì”{—¦(1‚ª•W€)")]
+    [Header("è½ä¸‹ä¸­ã®é‡åŠ›ã®å€ç‡(1ãŒæ¨™æº–)")]
     [SerializeField] private float gravityScale = 1f;
 
-    [Header("¶¬’¼ŒãƒvƒŒƒrƒ…[ó‘Ô‚É‚·‚é")]
+    [Header("ç”Ÿæˆç›´å¾Œãƒ—ãƒ¬ãƒ“ãƒ¥ãƒ¼çŠ¶æ…‹ã«ã™ã‚‹")]
     [SerializeField] private bool startInPreview = true;
 
-    [Header("ƒvƒŒƒrƒ…[’†‚¾‚Æ•ª‚©‚é‚æ‚¤‚É–¼‘O‚ğ•ÏX")]
+    [Header("ãƒ—ãƒ¬ãƒ“ãƒ¥ãƒ¼ä¸­ã ã¨åˆ†ã‹ã‚‹ã‚ˆã†ã«åå‰ã‚’å¤‰æ›´")]
     [SerializeField] private string previewChangeName = "[Preview]";
 
-    [Header("Physics‚Ì’²ß(’µ‚Ë‚éAŠŠ‚é‚È‚Ç‚Ì—}§)")]
+    [Header("Physicsã®èª¿ç¯€(è·³ã­ã‚‹ã€æ»‘ã‚‹ãªã©ã®æŠ‘åˆ¶)")]
     [SerializeField] private PhysicsMaterial2D physicsMaterial2D;
-    [Header("’µ‚Ë•Ô‚è‚Ì—}§")]
+    [Header("è·³ã­è¿”ã‚Šã®æŠ‘åˆ¶")]
     [SerializeField,Min(0f)] private float linearDrag = 0.8f;
-    [Header("ŠŠ‚è‚Ì—}§")]
+    [Header("æ»‘ã‚Šã®æŠ‘åˆ¶")]
     [SerializeField,Min(0f)] private float angularDrag = 1.2f;
-    [Header("“–‚½‚è”»’è‚ÌŒŸoƒ‚[ƒh")]
+    [Header("å½“ãŸã‚Šåˆ¤å®šã®æ¤œå‡ºãƒ¢ãƒ¼ãƒ‰")]
     [SerializeField] private CollisionDetectionMode2D collisionMode = CollisionDetectionMode2D.Continuous;
-    [Header("•\¦‚ÌŠŠ‚ç‚©‚³")]
+    [Header("è¡¨ç¤ºã®æ»‘ã‚‰ã‹ã•")]
     [SerializeField] private RigidbodyInterpolation2D interpolation = RigidbodyInterpolation2D.Interpolate;
 
-    [Header("‚‚³Œv‘ª—pHeightMeter2D‚ÌQÆ")]
+    [Header("é«˜ã•è¨ˆæ¸¬ç”¨HeightMeter2Dã®å‚ç…§")]
     [SerializeField] private HeightMeter2D heightMeter;
 
-    [Header("—‰º‚ÌŒø‰Ê‰¹")]
+    [Header("è½ä¸‹æ™‚ã®åŠ¹æœéŸ³")]
     [SerializeField] private AudioClip audioClip;
-    [Header("‰¹—Ê‚Ìİ’è")]
+    [Header("éŸ³é‡ã®è¨­å®š")]
     [SerializeField, Range(0f, 1f)] private float audioVolume = 1f;
 
     public Transform SpawnParent => spawnParent;
     public Vector3 SpawnPosition => spawnPosition;
     public float SpawnHeight => spawnHeight;
 
-    //  Sprite‚©‚çƒs[ƒX‚ğ¶¬‚µ‚Ä•Ô‚·
+    //  Spriteã‹ã‚‰ãƒ”ãƒ¼ã‚¹ã‚’ç”Ÿæˆã—ã¦è¿”ã™
     public GameObject Spawn(Sprite sprite)
     {
         if(sprite == null)
         {
-            Debug.LogError($"TowerPieseSpawner‚ÌSprite‚ªnull‚Å‚·");
+            Debug.LogError($"TowerPieceSpawnerã®SpriteãŒnullã§ã™");
             return null;
         }
 
-        //  GameObject‚ğ¶¬‚µ‚Äeq•t‚¯‚µ‚ÄAoŒ»ˆÊ’u‚ğŒˆ‚ß‚é
+        //  GameObjectã‚’ç”Ÿæˆã—ã¦è¦ªå­ä»˜ã‘ã—ã¦ã€å‡ºç¾ä½ç½®ã‚’æ±ºã‚ã‚‹
         var spawnedPiece = new GameObject("CapturedObject2D");
         if (spawnParent) spawnedPiece.transform.SetParent(spawnParent, true);
         spawnedPiece.transform.position = spawnPosition + Vector3.up * SpawnHeight;
 
-        //  ‰æ‘œ‚ğŒ©‚¦‚é‚æ‚¤‚Éo—Í‚·‚é
+        //  ç”»åƒã‚’è¦‹ãˆã‚‹ã‚ˆã†ã«å‡ºåŠ›ã™ã‚‹
         var spriteRen = spawnedPiece.AddComponent<SpriteRenderer>();
         spriteRen.sprite = sprite;
         spriteRen.sortingOrder = sortingOrder;
-        if (!string.IsNullOrEmpty(sortingLayerName))  //  ƒŒƒCƒ„[–¼‚ª‚ ‚éAid‚ğİ’è‚·‚é
+        if (!string.IsNullOrEmpty(sortingLayerName))  //  ãƒ¬ã‚¤ãƒ¤ãƒ¼åãŒã‚ã‚‹æ™‚ã€idã‚’è¨­å®šã™ã‚‹
         {
             int id = SortingLayer.NameToID(sortingLayerName);
             if (id != 0) spriteRen.sortingLayerID = id;
         }
 
-        //  “–‚½‚è”»’è‚Ì¶¬
+        //  å½“ãŸã‚Šåˆ¤å®šã®ç”Ÿæˆ
         var poly = spawnedPiece.AddComponent<PolygonCollider2D>();
         poly.isTrigger = false;
 
         if(physicsMaterial2D)
         {
-            //  2D•¨—ƒ}ƒeƒŠƒAƒ‹‚Ìİ’è
+            //  2Dç‰©ç†ãƒãƒ†ãƒªã‚¢ãƒ«ã®è¨­å®š
             poly.sharedMaterial = physicsMaterial2D;
         }
 
-        //  •¨—‚Ì¶¬
+        //  ç‰©ç†ã®ç”Ÿæˆ
         var rb = spawnedPiece.AddComponent<Rigidbody2D>();
         rb.gravityScale = gravityScale;
 
 
-        rb.drag = linearDrag;  //  ’µ‚Ë•Ô‚è‚Ì—}§
-        rb.angularDrag = angularDrag;  //  ŠŠ‚è‚Ì—}§
-        rb.collisionDetectionMode = collisionMode;  //  ŠÑ’Ê–h~‚Ì“–‚½‚è”»’è‚ÌŒŸoƒ‚[ƒh
-        rb.interpolation = interpolation;  //  •\¦‚ÌŠŠ‚ç‚©‚³
+        rb.drag = linearDrag;  //  è·³ã­è¿”ã‚Šã®æŠ‘åˆ¶
+        rb.angularDrag = angularDrag;  //  æ»‘ã‚Šã®æŠ‘åˆ¶
+        rb.collisionDetectionMode = collisionMode;  //  è²«é€šé˜²æ­¢ã®å½“ãŸã‚Šåˆ¤å®šã®æ¤œå‡ºãƒ¢ãƒ¼ãƒ‰
+        rb.interpolation = interpolation;  //  è¡¨ç¤ºã®æ»‘ã‚‰ã‹ã•
 
 
-        //  ƒvƒŒƒrƒ…[‚Ì‘€ì
+        //  ãƒ—ãƒ¬ãƒ“ãƒ¥ãƒ¼æ™‚ã®æ“ä½œ
         var drop = spawnedPiece.AddComponent<DroppablePiece>();
-        //  —‰º‚ÌŒø‰Ê‰¹İ’è
+        //  è½ä¸‹æ™‚ã®åŠ¹æœéŸ³è¨­å®š
         var src = spawnedPiece.AddComponent<AudioSource>();
         src.playOnAwake = false;
         src.volume = audioVolume;
@@ -110,13 +110,13 @@ public class TowerPieceSpawner : MonoBehaviour
 
         drop.SetupAudio(src, audioClip);
 
-        //  ‚‚³Œv‘ª—p‚ÌƒCƒxƒ“ƒg“o˜^
+        //  é«˜ã•è¨ˆæ¸¬ç”¨ã®ã‚¤ãƒ™ãƒ³ãƒˆç™»éŒ²
         if (heightMeter)
         {
             drop.OnPieceStopped += heightMeter.MeasureNow;
         }
 
-        //  ƒvƒŒƒrƒ…[‚Ì’â~
+        //  ãƒ—ãƒ¬ãƒ“ãƒ¥ãƒ¼ã®åœæ­¢
         if (startInPreview)
         {
             rb.isKinematic = true;
@@ -128,7 +128,7 @@ public class TowerPieceSpawner : MonoBehaviour
             drop.OnPieceStopped += pieceCounter.PieceStopped;
         }
 
-        //  ƒs[ƒX‚ğ•Ô‚·
+        //  ãƒ”ãƒ¼ã‚¹ã‚’è¿”ã™
         return spawnedPiece;
     }
 }

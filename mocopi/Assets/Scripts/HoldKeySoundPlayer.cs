@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -6,28 +6,28 @@ using UnityEngine.InputSystem;
 
 public class HoldKeySoundPlayer : MonoBehaviour
 {
-    [Header("‰Ÿ‚µ‚Ä‚¢‚éŠÔAÄ¶‚³‚¹‚éƒL[")]
+    [Header("æŠ¼ã—ã¦ã„ã‚‹é–“ã€å†ç”Ÿã•ã›ã‚‹ã‚­ãƒ¼")]
     [SerializeField] private InputActionReference holdAction;
 
-    [Header("Ä¶‚·‚éAudioSource")]
+    [Header("å†ç”Ÿã™ã‚‹AudioSource")]
     [SerializeField] private AudioSource audioSource;
 
     private void Awake()
     {
         if(audioSource == null)
         {
-            Debug.LogError($"{nameof(HoldKeySoundPlayer)}AudioSourceƒRƒ“ƒ|[ƒlƒ“ƒg‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñB", this);
+            Debug.LogError($"{nameof(HoldKeySoundPlayer)}AudioSourceã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã€‚", this);
             enabled = false;
             return;
         }
 
-        //  ƒL[‚ğ•ú‚·‚Ü‚ÅŒJ‚è•Ô‚µÄ¶‚³‚ê‚é
+        //  ã‚­ãƒ¼ã‚’æ”¾ã™ã¾ã§ç¹°ã‚Šè¿”ã—å†ç”Ÿã•ã‚Œã‚‹
         audioSource.loop = true;
     }
 
     private void OnEnable()
     {
-        //  InputAction‚Ì—LŒø‰»‚ÆƒR[ƒ‹ƒoƒbƒN“o˜^
+        //  InputActionã®æœ‰åŠ¹åŒ–ã¨ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ç™»éŒ²
         if (holdAction != null && holdAction.action != null)
         {
             holdAction.action.started += OnHoldStarted;
@@ -38,7 +38,7 @@ public class HoldKeySoundPlayer : MonoBehaviour
 
     private void OnDisable()
     {
-        //  ƒR[ƒ‹ƒoƒbƒN‰ğœ‚ÆInputAction‚Ì–³Œø‰»
+        //  ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯è§£é™¤ã¨InputActionã®ç„¡åŠ¹åŒ–
         if (holdAction != null && holdAction.action != null)
         {
             holdAction.action.started -= OnHoldStarted;
@@ -47,14 +47,14 @@ public class HoldKeySoundPlayer : MonoBehaviour
         }
     }
 
-    //  ƒL[‚ğ‰Ÿ‚µn‚ß‚½‚Æ‚«‚ÉŒÄ‚Î‚ê‚é
+    //  ã‚­ãƒ¼ã‚’æŠ¼ã—å§‹ã‚ãŸã¨ãã«å‘¼ã°ã‚Œã‚‹
     private void OnHoldStarted(InputAction.CallbackContext ctx)
     {
         if (!audioSource.isPlaying)
             audioSource.Play();
     }
 
-    //  ƒL[‚ğ•ú‚µ‚½‚Æ‚«‚ÉŒÄ‚Î‚ê‚é
+    //  ã‚­ãƒ¼ã‚’æ”¾ã—ãŸã¨ãã«å‘¼ã°ã‚Œã‚‹
     private void OnHoldCanceled(InputAction.CallbackContext ctx)
     {
         if (audioSource.isPlaying)

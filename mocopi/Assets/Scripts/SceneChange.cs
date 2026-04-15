@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -19,44 +19,44 @@ public class ButtonScenePair
 
 public class SceneChange : MonoBehaviour
 {
-    [Header("M5StampC3“ü—Í‚ğg‚¤‚©‚Ç‚¤‚©")]
+    [Header("M5StampC3å…¥åŠ›ã‚’ä½¿ã†ã‹ã©ã†ã‹")]
     [SerializeField] private bool useM5Input = true;
 
-    [Header("M55StampC3‚ÌƒVƒŠƒAƒ‹İ’è")]
+    [Header("M5StampC3ã®ã‚·ãƒªã‚¢ãƒ«è¨­å®š")]
     [SerializeField] private string portName = "COM3";
     [SerializeField] private int baudRate = 115200;
 
     [SerializeField] private string m5Token = "BTN:DOWN";
-    [Header("M5StampC3‚Å“Á’è‚Ì“ü—Í‚ğó‚¯æ‚Á‚½‚Æ‚«‚ÉØ‚è‘Ö‚¦‚éƒV[ƒ“–¼")]
+    [Header("M5StampC3ã§ç‰¹å®šã®å…¥åŠ›ã‚’å—ã‘å–ã£ãŸã¨ãã«åˆ‡ã‚Šæ›¿ãˆã‚‹ã‚·ãƒ¼ãƒ³å")]
     [SerializeField] private string m5SceneName = "DomyRoom";
 
-    [Header("ƒ{ƒ^ƒ“‚Å‚Ì“ü—Í‚ÆƒV[ƒ“–¼‚Ìƒ}ƒbƒsƒ“ƒO")]
+    [Header("ãƒœã‚¿ãƒ³ã§ã®å…¥åŠ›ã¨ã‚·ãƒ¼ãƒ³åã®ãƒãƒƒãƒ”ãƒ³ã‚°")]
     [SerializeField] private ButtonScenePair[] mappings;
 
-    [Header("ƒV[ƒ“Ø‚è‘Ö‚¦‘O‚É–Â‚ç‚·Œø‰Ê‰¹ (•K—v‚È)")]
+    [Header("ã‚·ãƒ¼ãƒ³åˆ‡ã‚Šæ›¿ãˆå‰ã«é³´ã‚‰ã™åŠ¹æœéŸ³ (å¿…è¦ãªæ™‚)")]
     [SerializeField] private AudioClip preLoadClip;
 
-    [Header("ƒV[ƒ“Ø‚è‘Ö‚¦‘O‚ÌŒø‰Ê‰¹‚Ì‰¹—Ê")]
+    [Header("ã‚·ãƒ¼ãƒ³åˆ‡ã‚Šæ›¿ãˆå‰ã®åŠ¹æœéŸ³ã®éŸ³é‡")]
     [SerializeField, Range(0f, 1f)]
     private float loadVolume = 1f;
 
-    //  Œø‰Ê‰¹‚ğ–Â‚ç‚·AudioSource
+    //  åŠ¹æœéŸ³ã‚’é³´ã‚‰ã™AudioSource
     private AudioSource audioSource;
 
-    //  M5StampC3—pƒVƒŠƒAƒ‹ƒ|[ƒgŠÖ˜A
+    //  M5StampC3ç”¨ã‚·ãƒªã‚¢ãƒ«ãƒãƒ¼ãƒˆé–¢é€£
     private SerialPort sp;
     private Thread readThread;
     private volatile bool running;
 
     private readonly object m5Lock = new object();
-    private string m5QueuedLine;  //  serial‚©‚ç“Ç‚İæ‚Á‚½s‚ğˆê“I‚É•Û‘¶‚·‚é•Ï”
+    private string m5QueuedLine;  //  serialã‹ã‚‰èª­ã¿å–ã£ãŸè¡Œã‚’ä¸€æ™‚çš„ã«ä¿å­˜ã™ã‚‹å¤‰æ•°
 
     private void Awake()
     {
-        //  preLoadClip‚É‰¹‚ª“ü‚Á‚Ä‚¢‚éê‡
+        //  preLoadClipã«éŸ³ãŒå…¥ã£ã¦ã„ã‚‹å ´åˆ
         if (preLoadClip != null)
         {
-            //  udioSource‚ª‚È‚¯‚ê‚Î’Ç‰Á‚·‚é
+            //  AudioSourceãŒãªã‘ã‚Œã°è¿½åŠ ã™ã‚‹
             audioSource = gameObject.GetComponent<AudioSource>();
             if(audioSource ==  null )
             {
@@ -98,7 +98,7 @@ public class SceneChange : MonoBehaviour
 
     private void OnAnyAction(InputAction.CallbackContext ctx)
     {
-        // ‰Ÿ‚³‚ê‚½ƒAƒNƒVƒ‡ƒ“‚ª‚Ç‚Ìƒ}ƒbƒsƒ“ƒO‚©‚ğ’T‚µ‚ÄƒV[ƒ“‘JˆÚ
+        // æŠ¼ã•ã‚ŒãŸã‚¢ã‚¯ã‚·ãƒ§ãƒ³ãŒã©ã®ãƒãƒƒãƒ”ãƒ³ã‚°ã‹ã‚’æ¢ã—ã¦ã‚·ãƒ¼ãƒ³é·ç§»
         foreach (var map in mappings)
         {
             if (ctx.action == map.ActionReference.action && !string.IsNullOrEmpty(map.SceneName))
@@ -112,7 +112,7 @@ public class SceneChange : MonoBehaviour
     private IEnumerator PlayThenLoad(string sceneName)
     {
         audioSource.PlayOneShot(preLoadClip, loadVolume);
-        //  Œø‰Ê‰¹‚Ì’·‚³‚¾‚¯‘Ò‚Á‚Ä‚©‚çƒ[ƒh
+        //  åŠ¹æœéŸ³ã®é•·ã•ã ã‘å¾…ã£ã¦ã‹ã‚‰ãƒ­ãƒ¼ãƒ‰
         yield return new WaitForSeconds(preLoadClip.length);
         SceneManager.LoadScene(sceneName);
     }
@@ -121,7 +121,7 @@ public class SceneChange : MonoBehaviour
     {
         if (!useM5Input) return;
 
-        //  M5StampC3‚©‚ç‚Ì“ü—Í‚ª‚ ‚ê‚Îˆ—‚·‚é
+        //  M5StampC3ã‹ã‚‰ã®å…¥åŠ›ãŒã‚ã‚Œã°å‡¦ç†ã™ã‚‹
         string line = null;
         lock (m5Lock)
         {

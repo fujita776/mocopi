@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,17 +6,17 @@ using UnityEngine;
 public static class SpriteBuilder
 {
     public static Sprite CreateSprite(
-        Texture2D tex,  //  Œ³‚É‚È‚é‰æ‘œ
-        float pixelsPerUnit = 100f,  //  ‰½ƒsƒNƒZƒ‹‚ğUnity‚Ì1ƒ†ƒjƒbƒg‚Æ‚İ‚È‚·‚©
-        SpriteMeshType meshType = SpriteMeshType.Tight,  //  ƒXƒvƒ‰ƒCƒg‚ÌƒƒbƒVƒ…Œ`ó
-        Vector2? pivot = default  //  ƒXƒvƒ‰ƒCƒg‚ÌŒ´“_
+        Texture2D tex,  //  å…ƒã«ãªã‚‹ç”»åƒ
+        float pixelsPerUnit = 100f,  //  ä½•ãƒ”ã‚¯ã‚»ãƒ«ã‚’Unityã®1ãƒ¦ãƒ‹ãƒƒãƒˆã¨ã¿ãªã™ã‹
+        SpriteMeshType meshType = SpriteMeshType.Tight,  //  ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã®ãƒ¡ãƒƒã‚·ãƒ¥å½¢çŠ¶
+        Vector2? pivot = default  //  ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã®åŸç‚¹
         )
     {
         if(tex == null)
-            throw new ArgumentNullException(nameof(tex), "SpriteBuilder‚ÌƒeƒNƒXƒ`ƒƒ‚ªnull‚É‚È‚Á‚Ä‚¢‚Ü‚·B");
+            throw new ArgumentNullException(nameof(tex), "SpriteBuilderã®ãƒ†ã‚¯ã‚¹ãƒãƒ£ãŒnullã«ãªã£ã¦ã„ã¾ã™ã€‚");
 
         if (pixelsPerUnit <= 0)
-            throw new ArgumentOutOfRangeException(nameof(pixelsPerUnit), "pixelsPerUnit‚Ì‘å‚«‚³‚Í0‚æ‚èã‚É‚µ‚Ä‰º‚³‚¢");
+            throw new ArgumentOutOfRangeException(nameof(pixelsPerUnit), "pixelsPerUnitã®å¤§ãã•ã¯0ã‚ˆã‚Šä¸Šã«ã—ã¦ä¸‹ã•ã„");
 
         if (pivot == default)
             pivot = new Vector2(0.5f, 0.5f);

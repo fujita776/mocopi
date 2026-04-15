@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
@@ -7,30 +7,30 @@ using System.Threading;
 
 public class M5StampC3ButtonReceiver : MonoBehaviour
 {
-    [Header("ƒ}ƒCƒRƒ“‚Ìƒ|[ƒg”Ô†")]
+    [Header("ãƒã‚¤ã‚³ãƒ³ã®ãƒãƒ¼ãƒˆç•ªå·")]
     public string portName = "COM3";
     public int baudRate = 115200;
 
-    SerialPort serialPort;  //  ƒVƒŠƒAƒ‹ƒ|[ƒgƒIƒuƒWƒFƒNƒg
-    Thread readThread;  //  óMƒXƒŒƒbƒh
-    volatile bool running;  //  óMƒXƒŒƒbƒhÀsƒtƒ‰ƒO
-    readonly object lockObject = new object();  //  ƒƒbƒNƒIƒuƒWƒFƒNƒg
-    string queuedLine;  //  óMƒf[ƒ^ƒLƒ…[
+    SerialPort serialPort;  //  ã‚·ãƒªã‚¢ãƒ«ãƒãƒ¼ãƒˆã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+    Thread readThread;  //  å—ä¿¡ã‚¹ãƒ¬ãƒƒãƒ‰
+    volatile bool running;  //  å—ä¿¡ã‚¹ãƒ¬ãƒƒãƒ‰å®Ÿè¡Œãƒ•ãƒ©ã‚°
+    readonly object lockObject = new object();  //  ãƒ­ãƒƒã‚¯ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+    string queuedLine;  //  å—ä¿¡ãƒ‡ãƒ¼ã‚¿ã‚­ãƒ¥ãƒ¼
 
     void Start()
     {
-        //  ƒVƒŠƒAƒ‹ƒ|[ƒg‚Ì‰Šú‰»
+        //  ã‚·ãƒªã‚¢ãƒ«ãƒãƒ¼ãƒˆã®åˆæœŸåŒ–
         serialPort = new SerialPort(portName, baudRate)
         {
-            NewLine = "\n",  //  ‰üsƒR[ƒh‚Ìİ’è
-            ReadTimeout = 200,  //  ƒ^ƒCƒ€ƒAƒEƒgŠÔiƒ~ƒŠ•bj
-            DtrEnable = true,  //  ƒf[ƒ^’[––€”õM†‚ğ—LŒø‚É‚·‚é
-            RtsEnable = true  //  ‘—M—v‹M†‚ğ—LŒø‚É‚·‚é
+            NewLine = "\n",  //  æ”¹è¡Œã‚³ãƒ¼ãƒ‰ã®è¨­å®š
+            ReadTimeout = 200,  //  ã‚¿ã‚¤ãƒ ã‚¢ã‚¦ãƒˆæ™‚é–“ï¼ˆãƒŸãƒªç§’ï¼‰
+            DtrEnable = true,  //  ãƒ‡ãƒ¼ã‚¿ç«¯æœ«æº–å‚™ä¿¡å·ã‚’æœ‰åŠ¹ã«ã™ã‚‹
+            RtsEnable = true  //  é€ä¿¡è¦æ±‚ä¿¡å·ã‚’æœ‰åŠ¹ã«ã™ã‚‹
         };
 
         serialPort.Open();
 
-        //  óMƒXƒŒƒbƒh‚ÌŠJn
+        //  å—ä¿¡ã‚¹ãƒ¬ãƒƒãƒ‰ã®é–‹å§‹
         running = true;
         readThread = new Thread(ReadLoop);
         readThread.IsBackground = true;
@@ -46,16 +46,16 @@ public class M5StampC3ButtonReceiver : MonoBehaviour
                 var line = serialPort.ReadLine().Trim();
                 lock (lockObject)
                 {
-                    queuedLine = line;  //  ÅV‚ÌóMƒf[ƒ^‚ğƒLƒ…[‚ÉŠi”[
+                    queuedLine = line;  //  æœ€æ–°ã®å—ä¿¡ãƒ‡ãƒ¼ã‚¿ã‚’ã‚­ãƒ¥ãƒ¼ã«æ ¼ç´
                 }
             }
             catch (TimeoutException)
             {
-                //  ƒ^ƒCƒ€ƒAƒEƒg‚Í–³‹
+                //  ã‚¿ã‚¤ãƒ ã‚¢ã‚¦ãƒˆæ™‚ã¯ç„¡è¦–
             }
             catch (Exception e)
             {
-                Debug.LogError("ƒVƒŠƒAƒ‹ƒ|[ƒg“Ç‚İæ‚èƒGƒ‰[: " + e.Message);
+                Debug.LogError("ã‚·ãƒªã‚¢ãƒ«ãƒãƒ¼ãƒˆèª­ã¿å–ã‚Šã‚¨ãƒ©ãƒ¼: " + e.Message);
                 running = false;
             }
         }
@@ -69,7 +69,7 @@ public class M5StampC3ButtonReceiver : MonoBehaviour
             if (!string.IsNullOrEmpty(queuedLine))
             {
                 line = queuedLine;
-                queuedLine = null;  //  ƒLƒ…[‚ğƒNƒŠƒA
+                queuedLine = null;  //  ã‚­ãƒ¥ãƒ¼ã‚’ã‚¯ãƒªã‚¢
             }
         }
         if (line == null)
@@ -80,7 +80,7 @@ public class M5StampC3ButtonReceiver : MonoBehaviour
         if (line == "BTN:DOWN")
         {
             Debug.Log("BTN DOWN");
-            //  ƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚½‚Æ‚«‚Ìˆ—‚ğ‚±‚±‚É’Ç‰Á
+            //  ãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚ŒãŸã¨ãã®å‡¦ç†ã‚’ã“ã“ã«è¿½åŠ 
         }
         else if (line == "BTN:UP")
         {
@@ -90,13 +90,13 @@ public class M5StampC3ButtonReceiver : MonoBehaviour
 
     void OnDestroy()
     {
-        //  óMƒXƒŒƒbƒh‚Ì’â~
+        //  å—ä¿¡ã‚¹ãƒ¬ãƒƒãƒ‰ã®åœæ­¢
         running = false;
         try 
         { 
             readThread?.Join(300);
         } catch {}
-        //  ƒVƒŠƒAƒ‹ƒ|[ƒg‚ÌƒNƒ[ƒY
+        //  ã‚·ãƒªã‚¢ãƒ«ãƒãƒ¼ãƒˆã®ã‚¯ãƒ­ãƒ¼ã‚º
         try
         { 
             if (serialPort != null && serialPort.IsOpen) serialPort.Close();

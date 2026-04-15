@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,7 +6,7 @@ using UnityEngine;
 [RequireComponent(typeof(AudioSource))]
 public class MuteSource : MonoBehaviour
 {
-    [SerializeField] private bool muteAudioSource = true;  //  ‚±‚±‚ğfalse‚É‚·‚é‚±‚Æ‚ÅAƒ~ƒ…[ƒg‚Å‚È‚¢ó‘Ô‚É‚ào—ˆ‚é‚æ‚¤‚É‚·‚é
+    [SerializeField] private bool muteAudioSource = true;  //  ã“ã“ã‚’falseã«ã™ã‚‹ã“ã¨ã§ã€ãƒŸãƒ¥ãƒ¼ãƒˆã§ãªã„çŠ¶æ…‹ã«ã‚‚å‡ºæ¥ã‚‹ã‚ˆã†ã«ã™ã‚‹
 
 
     void OnAudioFilterRead(float[] data, int channels)

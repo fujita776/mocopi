@@ -1,29 +1,29 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PieceCounter : MonoBehaviour
 {
-    [Header("QÆ‚·‚éTowerPiceSpawner")]
+    [Header("å‚ç…§ã™ã‚‹TowerPieceSpawner")]
     [SerializeField] private TowerPieceSpawner spawner;
 
-    //  Œ»İ‚Ìƒs[ƒX”
+    //  ç¾åœ¨ã®ãƒ”ãƒ¼ã‚¹æ•°
     public int CurrentCount
     {
         get;
         private set;
     }
 
-    //  ƒV[ƒPƒ“ƒX’†‚ÌÅ‘åƒs[ƒX”
+    //  ã‚·ãƒ¼ã‚±ãƒ³ã‚¹ä¸­ã®æœ€å¤§ãƒ”ãƒ¼ã‚¹æ•°
     public int MaxCount
     {
         get;
         private set;
     }
 
-    public event Action<int> OnCountChanged;  //  ƒs[ƒX”‚ª•Ï‰»‚µ‚½‚Æ‚«‚É”­‰Î‚·‚éƒCƒxƒ“ƒg
-    public event Action<int> OnMaxCountUpdated;  //  ƒV[ƒPƒ“ƒX’†‚ÌÅ‘åƒs[ƒX”‚ªXV‚³‚ê‚½‚Æ‚«‚É”­‰Î‚·‚éƒCƒxƒ“ƒg
+    public event Action<int> OnCountChanged;  //  ãƒ”ãƒ¼ã‚¹æ•°ãŒå¤‰åŒ–ã—ãŸã¨ãã«ç™ºç«ã™ã‚‹ã‚¤ãƒ™ãƒ³ãƒˆ
+    public event Action<int> OnMaxCountUpdated;  //  ã‚·ãƒ¼ã‚±ãƒ³ã‚¹ä¸­ã®æœ€å¤§ãƒ”ãƒ¼ã‚¹æ•°ãŒæ›´æ–°ã•ã‚ŒãŸã¨ãã«ç™ºç«ã™ã‚‹ã‚¤ãƒ™ãƒ³ãƒˆ
 
     private void Awake()
     {
@@ -33,7 +33,7 @@ public class PieceCounter : MonoBehaviour
         }
     }
 
-    //  ƒs[ƒX‚ªŠ®‘S‚É’â~‚µ‚½ó‘Ô‚ÅŒÄ‚Ño‚³‚ê‚éƒƒ\ƒbƒh
+    //  ãƒ”ãƒ¼ã‚¹ãŒå®Œå…¨ã«åœæ­¢ã—ãŸçŠ¶æ…‹ã§å‘¼ã³å‡ºã•ã‚Œã‚‹ãƒ¡ã‚½ãƒƒãƒ‰
     public void PieceStopped()
     {
         RecountPiece();

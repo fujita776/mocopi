@@ -1,19 +1,19 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class NullHandHolder : IHandHolder
 {
-    // HandTransform ‚Íƒ_ƒ~[‚Æ‚µ‚Ä null ‚ğ•Ô‚·i•K—v‚È‚çˆÀ‘S‚Èƒ_ƒ~[ Transform ‚ğ•Ô‚·À‘•‚à‰Â”\j
+    // HandTransform ã¯ãƒ€ãƒŸãƒ¼ã¨ã—ã¦ null ã‚’è¿”ã™ï¼ˆå¿…è¦ãªã‚‰å®‰å…¨ãªãƒ€ãƒŸãƒ¼ Transform ã‚’è¿”ã™å®Ÿè£…ã‚‚å¯èƒ½ï¼‰
     public Transform HandTransform => null;
 
-    // HeldItem ‚Íí‚É‰½‚à•Û‚µ‚Ä‚¢‚È‚¢‚Ì‚Å null ‚ğ•Ô‚·
+    // HeldItem ã¯å¸¸ã«ä½•ã‚‚ä¿æŒã—ã¦ã„ãªã„ã®ã§ null ã‚’è¿”ã™
     public GameObject HeldItem { get; private set; } = null;
 
-    // ‰½‚à‚µ‚È‚¢À‘•
+    // ä½•ã‚‚ã—ãªã„å®Ÿè£…
     public void AttachItem(GameObject item) { }
 
-    // ‰½‚à‚µ‚È‚¢À‘•
+    // ä½•ã‚‚ã—ãªã„å®Ÿè£…
     public void DetachItem() { }
 
     public void ThrowItem(Transform target, float force) { }

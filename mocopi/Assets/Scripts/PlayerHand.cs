@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class PlayerHand : MonoBehaviour, IHandHolder
 {
@@ -38,11 +38,11 @@ public class PlayerHand : MonoBehaviour, IHandHolder
     }
 
     /// <summary>
-    /// Œ»İ•Û‚µ‚Ä‚¢‚éƒAƒCƒeƒ€‚ğAw’è‚Ìƒ^[ƒQƒbƒgˆÊ’u‚É“Š‚°‚éˆ—B
-    /// throwForce ‚Ì’l‚É‰‚¶‚ÄA“’B‚·‚é‚½‚ß‚Ì”­ËŠp“x‚ğŒvZ‚µ‚Ü‚·B
+    /// ç¾åœ¨ä¿æŒã—ã¦ã„ã‚‹ã‚¢ã‚¤ãƒ†ãƒ ã‚’ã€æŒ‡å®šã®ã‚¿ãƒ¼ã‚²ãƒƒãƒˆä½ç½®ã«æŠ•ã’ã‚‹å‡¦ç†ã€‚
+    /// throwForce ã®å€¤ã«å¿œã˜ã¦ã€åˆ°é”ã™ã‚‹ãŸã‚ã®ç™ºå°„è§’åº¦ã‚’è¨ˆç®—ã—ã¾ã™ã€‚
     /// </summary>
-    /// <param name="target">“Š‚°æ‚Ìƒ^[ƒQƒbƒg Transform</param>
-    /// <param name="force">“Š‚°‚é—Íi‰‘¬j</param>
+    /// <param name="target">æŠ•ã’å…ˆã®ã‚¿ãƒ¼ã‚²ãƒƒãƒˆ Transform</param>
+    /// <param name="force">æŠ•ã’ã‚‹åŠ›ï¼ˆåˆé€Ÿï¼‰</param>
     public void ThrowItem(Transform target, float force)
     {
         if (HeldItem == null || target == null) return;
@@ -58,30 +58,30 @@ public class PlayerHand : MonoBehaviour, IHandHolder
         }
         rb.isKinematic = false;
 
-        // Œ»İ‚ÌèŒ³ˆÊ’u‚©‚çƒ^[ƒQƒbƒg‚Ü‚Å‚Ì•ÏˆÊ‚ğ‹‚ß‚é
+        // ç¾åœ¨ã®æ‰‹å…ƒä½ç½®ã‹ã‚‰ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã¾ã§ã®å¤‰ä½ã‚’æ±‚ã‚ã‚‹
         Vector3 displacement = target.position - handTransform.position;
-        // …•½¬•ª‚Ì‚İiY¬•ª‚ğœ‚­j
+        // æ°´å¹³æˆåˆ†ã®ã¿ï¼ˆYæˆåˆ†ã‚’é™¤ãï¼‰
         Vector3 horizontalDisplacement = new Vector3(displacement.x, 0, displacement.z);
-        float d = horizontalDisplacement.magnitude;  // …•½‹——£
-        float h = displacement.y;                      // ‚‚³‚Ì·
-        float v = force;                               // ‰‘¬‚Æ‚µ‚Ä‚Ì throwForce
-        float g = -Physics.gravity.y;                  // d—Í‰Á‘¬“xi³‚Ì’lj
+        float d = horizontalDisplacement.magnitude;  // æ°´å¹³è·é›¢
+        float h = displacement.y;                      // é«˜ã•ã®å·®
+        float v = force;                               // åˆé€Ÿã¨ã—ã¦ã® throwForce
+        float g = -Physics.gravity.y;                  // é‡åŠ›åŠ é€Ÿåº¦ï¼ˆæ­£ã®å€¤ï¼‰
 
-        // ”»•Ê®‚ğŒvZFv^4 - g*(g*d^2 + 2*h*v^2)
+        // åˆ¤åˆ¥å¼ã‚’è¨ˆç®—ï¼šv^4 - g*(g*d^2 + 2*h*v^2)
         float disc = v * v * v * v - g * (g * d * d + 2 * h * v * v);
         if (disc < 0)
         {
-            // “Š‚°‚é—Í‚ª‘«‚è‚¸ƒ^[ƒQƒbƒg‚É“’B‚Å‚«‚È‚¢ê‡‚ÍA’Êí‚Ì•ûŒü‚É—Í‚ğ‰Á‚¦‚é
-            Debug.LogWarning("w’è‚Ì—Í‚Å‚Íƒ^[ƒQƒbƒg‚É“’B‚Å‚«‚Ü‚¹‚ñB");
+            // æŠ•ã’ã‚‹åŠ›ãŒè¶³ã‚Šãšã‚¿ãƒ¼ã‚²ãƒƒãƒˆã«åˆ°é”ã§ããªã„å ´åˆã¯ã€é€šå¸¸ã®æ–¹å‘ã«åŠ›ã‚’åŠ ãˆã‚‹
+            Debug.LogWarning("æŒ‡å®šã®åŠ›ã§ã¯ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã«åˆ°é”ã§ãã¾ã›ã‚“ã€‚");
             rb.AddForce((target.position - handTransform.position).normalized * v, ForceMode.Impulse);
             return;
         }
 
         float sqrtDisc = Mathf.Sqrt(disc);
-        // ’á‹O“¹‚Ì‰ğ‚ğ‘I‚Ôiv^2 - sqrtDiscj
+        // ä½è»Œé“ã®è§£ã‚’é¸ã¶ï¼ˆv^2 - sqrtDiscï¼‰
         float angle = Mathf.Atan((v * v - sqrtDisc) / (g * d));
 
-        // ‰‘¬ƒxƒNƒgƒ‹‚ğŒvZF…•½¬•ª‚Æ‚’¼¬•ª‚É•ª‚¯‚é
+        // åˆé€Ÿãƒ™ã‚¯ãƒˆãƒ«ã‚’è¨ˆç®—ï¼šæ°´å¹³æˆåˆ†ã¨å‚ç›´æˆåˆ†ã«åˆ†ã‘ã‚‹
         Vector3 initialVelocity = horizontalDisplacement.normalized * (v * Mathf.Cos(angle)) + Vector3.up * (v * Mathf.Sin(angle));
         rb.AddForce(initialVelocity, ForceMode.Impulse);
     }

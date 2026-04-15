@@ -1,17 +1,17 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//  ƒCƒ“ƒXƒyƒNƒ^[ƒrƒ…[‚ÅƒVƒŠƒAƒ‰ƒCƒY‚ª‰Â”\‚ÈƒNƒ‰ƒX
+//  ã‚¤ãƒ³ã‚¹ãƒšã‚¯ã‚¿ãƒ¼ãƒ“ãƒ¥ãƒ¼ã§ã‚·ãƒªã‚¢ãƒ©ã‚¤ã‚ºãŒå¯èƒ½ãªã‚¯ãƒ©ã‚¹
 [System.Serializable]
 public class ShapeKeyPair
 {
-    [Tooltip("SkinnedMesh‚ÌBlendShape–¼")]
+    [Tooltip("SkinnedMeshã®BlendShapeå")]
     public string shapeName;
-    [Tooltip("‚±‚ÌƒL[‚ª‰Ÿ‚³‚ê‚½‚çØ‚è‘Ö‚¦‚é")]
+    [Tooltip("ã“ã®ã‚­ãƒ¼ãŒæŠ¼ã•ã‚ŒãŸã‚‰åˆ‡ã‚Šæ›¿ãˆã‚‹")]
     public KeyCode key;
 
-    //  ƒ‰ƒ“ƒ^ƒCƒ€’†‚É©“®‚ÅƒZƒbƒg‚³‚ê‚éƒtƒB[ƒ‹ƒh
+    //  ãƒ©ãƒ³ã‚¿ã‚¤ãƒ ä¸­ã«è‡ªå‹•ã§ã‚»ãƒƒãƒˆã•ã‚Œã‚‹ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰
     [HideInInspector] public int index;
     [HideInInspector] public float weight;
     [HideInInspector] public bool duttonTriggered;
@@ -19,9 +19,9 @@ public class ShapeKeyPair
 
 public class BlendShapeController : MonoBehaviour
 {
-    [Header("‘ÎÛ‚Ì“ª•”ƒIƒuƒWƒFƒNƒg")]
+    [Header("å¯¾è±¡ã®é ­éƒ¨ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ")]
     public GameObject head;
-    [Header("‘€ì‚·‚éƒVƒFƒCƒv‚ÆƒL[‚Ì‘g‚İ‡‚í‚¹")]
+    [Header("æ“ä½œã™ã‚‹ã‚·ã‚§ã‚¤ãƒ—ã¨ã‚­ãƒ¼ã®çµ„ã¿åˆã‚ã›")]
     public ShapeKeyPair[] pairs;
 
     private SkinnedMeshRenderer skinnedMeshRenderer;
@@ -30,27 +30,27 @@ public class BlendShapeController : MonoBehaviour
     {
         if(head == null)
         {
-            Debug.LogError("“ª•”ƒIƒuƒWƒFƒNƒg‚ªİ’è‚³‚ê‚Ä‚¢‚Ü‚¹‚ñB");
+            Debug.LogError("é ­éƒ¨ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãŒè¨­å®šã•ã‚Œã¦ã„ã¾ã›ã‚“ã€‚");
             enabled = false;
             return;
         }
 
-        //  ƒXƒLƒ“ƒƒbƒVƒ…ƒŒƒ“ƒ_ƒ‰[‚ğæ“¾
+        //  ã‚¹ã‚­ãƒ³ãƒ¡ãƒƒã‚·ãƒ¥ãƒ¬ãƒ³ãƒ€ãƒ©ãƒ¼ã‚’å–å¾—
         skinnedMeshRenderer = head.GetComponent<SkinnedMeshRenderer>();
         if(skinnedMeshRenderer == null)
         {
-            Debug.LogError("“ª•”ƒIƒuƒWƒFƒNƒg‚ÉƒXƒLƒ“ƒƒbƒVƒ…ƒŒƒ“ƒ_ƒ‰[‚ª‘¶İ‚µ‚Ä‚¢‚Ü‚¹‚ñB");
+            Debug.LogError("é ­éƒ¨ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«ã‚¹ã‚­ãƒ³ãƒ¡ãƒƒã‚·ãƒ¥ãƒ¬ãƒ³ãƒ€ãƒ©ãƒ¼ãŒå­˜åœ¨ã—ã¦ã„ã¾ã›ã‚“ã€‚");
             enabled = false;
             return;
         }
 
-        //  ŠeƒVƒFƒCƒv‚ÌƒCƒ“ƒfƒbƒNƒX‚Æ‰Šú’l‚ğƒZƒbƒg‚·‚é
+        //  å„ã‚·ã‚§ã‚¤ãƒ—ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã¨åˆæœŸå€¤ã‚’ã‚»ãƒƒãƒˆã™ã‚‹
         foreach (var pair in pairs)
         {
             pair.index = skinnedMeshRenderer.sharedMesh.GetBlendShapeIndex(pair.shapeName);
 
             if (pair.index < 0)
-                Debug.LogWarning($"ƒuƒŒƒ“ƒhƒVƒFƒCƒv‚Ì{pair.shapeName}‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñB");
+                Debug.LogWarning($"ãƒ–ãƒ¬ãƒ³ãƒ‰ã‚·ã‚§ã‚¤ãƒ—ã®{pair.shapeName}ãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã€‚");
 
             pair.weight = 0;
             pair.duttonTriggered = false;
@@ -61,14 +61,14 @@ public class BlendShapeController : MonoBehaviour
     {
         foreach(var pair in pairs)
         {
-            //  ƒL[‚ª—£‚ê‚Ä‚¢‚½‚çAƒ{ƒ^ƒ“‚Ìó‘Ô‚ğƒŠƒZƒbƒg‚·‚é
+            //  ã‚­ãƒ¼ãŒé›¢ã‚Œã¦ã„ãŸã‚‰ã€ãƒœã‚¿ãƒ³ã®çŠ¶æ…‹ã‚’ãƒªã‚»ãƒƒãƒˆã™ã‚‹
             if(!Input.GetKey(pair.key))
             {
                 pair.duttonTriggered = false;
                 continue;
             }
 
-            //  ŠY“–‚·‚éƒL[‚ª‰Ÿ‚³‚ê‚Ä‚¢‚é
+            //  è©²å½“ã™ã‚‹ã‚­ãƒ¼ãŒæŠ¼ã•ã‚Œã¦ã„ã‚‹æ™‚
             if(!pair.duttonTriggered)
             {
                 pair.weight = (pair.weight == 0f) ? 100f : 0f;
