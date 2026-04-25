@@ -3,14 +3,29 @@ using UnityEngine;
 using Whisper;
 using Whisper.Utils;
 
+public enum ModeOverride
+{
+    UseSettings,   //  LiveTranslationSettings.defaultMode に従う
+    ForceAuto,     //  このシーンでは自動認識
+    ForcePushToTalk, //  このシーンではPTT
+}
+
 /// <summary>
 /// ライブ翻訳パイプラインの統合管理
-/// 設定はLiveTranslationSettings（ScriptableObject）で全シーン共通化
+/// 設定はLiveTranslationSettings（ScriptableObject）で全シーン共通。
+/// シーン固有の挙動はoverrideModeで上書き可能。
+/// DefaultExecutionOrder=-100: WhisperManagerより先にAwakeを実行し、
+/// initOnAwakeを無効化してモデルパス等の設定を反映できるようにする。
 /// </summary>
+[DefaultExecutionOrder(-100)]
 public class LiveTranslationManager : MonoBehaviour
 {
     [Header("共通設定")]
     [SerializeField] private LiveTranslationSettings settings;
+
+    [Header("シーン固有のモード上書き")]
+    [Tooltip("UseSettings以外を選ぶとこのシーンではSettings.defaultModeを上書きする")]
+    [SerializeField] private ModeOverride overrideMode = ModeOverride.UseSettings;
 
     [Header("コンポーネント")]
     [SerializeField] private WhisperManager whisperManager;
@@ -27,12 +42,36 @@ public class LiveTranslationManager : MonoBehaviour
     private bool _initialized;
     private bool _subtitleEnabled = true;
     private bool _translationEnabled = true;
+    private bool _pttHeld;
+
+    public TranslationMode EffectiveMode
+    {
+        get
+        {
+            return overrideMode switch
+            {
+                ModeOverride.ForceAuto => TranslationMode.Auto,
+                ModeOverride.ForcePushToTalk => TranslationMode.PushToTalk,
+                _ => settings != null ? settings.defaultMode : TranslationMode.Auto,
+            };
+        }
+    }
+
+    void Awake()
+    {
+        //  WhisperManagerの自動ロードを無効化（Start()で我々が制御するため）
+        //  これによりApplySettings()のリフレクションが有効になる
+        if (whisperManager != null)
+        {
+            SetPrivateField(whisperManager, "initOnAwake", false);
+        }
+    }
 
     async void Start()
     {
         _subtitleEnabled = PlayerPrefs.GetInt(PrefSubtitleEnabled, 1) == 1;
         _translationEnabled = PlayerPrefs.GetInt(PrefTranslationEnabled, 1) == 1;
-        Debug.Log($"[LiveTranslation] 初期設定: 字幕={_subtitleEnabled}, 翻訳={_translationEnabled}");
+        Debug.Log($"[LiveTranslation] 初期設定: 字幕={_subtitleEnabled}, 翻訳={_translationEnabled}, モード={EffectiveMode}");
 
         if (!ValidateComponents()) return;
 
@@ -43,7 +82,8 @@ public class LiveTranslationManager : MonoBehaviour
         if (!System.IO.File.Exists(modelPath))
         {
             string msg = $"Whisperモデル ({settings.modelPath}) が見つかりません。\n\n" +
-                "Dropboxからダウンロードして Assets/StreamingAssets/ に配置してください。";
+                "以下からダウンロードして Assets/StreamingAssets/ に配置してください:\n" +
+                "https://www.dropbox.com/scl/fi/efo4ka56lvuriyalr5zkh/ggml-medium-q5_0.bin?rlkey=yy7x1pulr1od4z18o4e8ooni1&st=0ur27rb0&dl=0";
             Debug.LogError($"[LiveTranslation] {msg}");
 #if UNITY_EDITOR
             UnityEditor.EditorUtility.DisplayDialog("Live Translation - モデル未配置", msg, "OK");
@@ -94,32 +134,58 @@ public class LiveTranslationManager : MonoBehaviour
         //  ストリーム作成
         var freq = AudioSettings.outputSampleRate;
         _stream = await whisperManager.CreateStream(freq, 1);
-        _stream.OnSegmentFinished += OnSegmentFinished;
+        _stream.OnSegmentUpdated += OnSegmentUpdated;
 
         audioBridge.SetChunkCallback(chunk => _stream.AddToStream(chunk));
+
+        //  モードに応じて初期ストリーミング状態を設定
+        audioBridge.SetStreamingEnabled(EffectiveMode == TranslationMode.Auto);
 
         _initialized = true;
 
         if (autoStart)
             StartTranslation();
 
-        Debug.Log("[LiveTranslation] 初期化完了");
+        Debug.Log($"[LiveTranslation] 初期化完了（モード: {EffectiveMode}）");
     }
 
     void Update()
     {
-        if (settings == null) return;
+        if (settings == null || !_initialized) return;
 
+        //  F1: 字幕ON/OFF
         if (Input.GetKeyDown(settings.subtitleToggleKey))
             ToggleSubtitle();
 
+        //  F2: 翻訳切替
         if (Input.GetKeyDown(settings.translationToggleKey))
             ToggleTranslation();
+
+        //  PTT: キー押下中のみストリーミング
+        if (EffectiveMode == TranslationMode.PushToTalk)
+        {
+            bool isHeld = Input.GetKey(settings.pushToTalkKey);
+            if (isHeld != _pttHeld)
+            {
+                _pttHeld = isHeld;
+                audioBridge.SetStreamingEnabled(isHeld);
+
+                if (isHeld)
+                {
+                    subtitleUI.ShowProcessing();
+                    Debug.Log("[LiveTranslation] PTT開始");
+                }
+                else
+                {
+                    Debug.Log("[LiveTranslation] PTT終了");
+                }
+            }
+        }
     }
 
     private void ApplySettings()
     {
-        //  public フィールドをScriptableObjectから反映
+        //  publicフィールドをScriptableObjectから反映
         whisperManager.language = "ja";
         whisperManager.translateToEnglish = _translationEnabled;
         whisperManager.noContext = settings.noContext;
@@ -129,8 +195,25 @@ public class LiveTranslationManager : MonoBehaviour
         whisperManager.keepSec = settings.keepSec;
         whisperManager.lengthSec = settings.lengthSec;
         whisperManager.updatePrompt = settings.updatePrompt;
+        whisperManager.initialPrompt = settings.initialPrompt;
 
-        //  privateフィールド（modelPath等）はEditorセットアップ時に設定済み
+        //  privateフィールドをリフレクションで反映（モデルパス等）
+        //  モデル未読み込みの場合のみ有効（ロード後の変更は無視される）
+        if (!whisperManager.IsLoaded && !whisperManager.IsLoading)
+        {
+            SetPrivateField(whisperManager, "modelPath", settings.modelPath);
+            SetPrivateField(whisperManager, "isModelPathInStreamingAssets", settings.isModelPathInStreamingAssets);
+            SetPrivateField(whisperManager, "useGpu", settings.useGpu);
+            SetPrivateField(whisperManager, "flashAttention", settings.flashAttention);
+        }
+    }
+
+    private static void SetPrivateField(object target, string fieldName, object value)
+    {
+        var field = target.GetType().GetField(fieldName,
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        if (field != null)
+            field.SetValue(target, value);
     }
 
     public void ToggleSubtitle()
@@ -138,10 +221,18 @@ public class LiveTranslationManager : MonoBehaviour
         _subtitleEnabled = !_subtitleEnabled;
         PlayerPrefs.SetInt(PrefSubtitleEnabled, _subtitleEnabled ? 1 : 0);
         PlayerPrefs.Save();
-        Debug.Log($"[LiveTranslation] 字幕: {(_subtitleEnabled ? "ON" : "OFF")}");
 
-        if (!_subtitleEnabled)
+        string msg = _subtitleEnabled ? "字幕 ON" : "字幕 OFF";
+        Debug.Log($"[LiveTranslation] {msg}");
+
+        if (_subtitleEnabled)
+        {
+            subtitleUI.ShowNotification(msg, settings.notificationDuration);
+        }
+        else
+        {
             subtitleUI.HideSubtitle();
+        }
     }
 
     public async void ToggleTranslation()
@@ -156,7 +247,11 @@ public class LiveTranslationManager : MonoBehaviour
         ForceUpdateWhisperParams();
         await RecreateStream();
 
-        Debug.Log($"[LiveTranslation] 翻訳: {(_translationEnabled ? "ON (英語)" : "OFF (日本語)")}");
+        string msg = _translationEnabled ? "翻訳 ON (英語)" : "翻訳 OFF (日本語)";
+        Debug.Log($"[LiveTranslation] {msg}");
+
+        if (_subtitleEnabled)
+            subtitleUI.ShowNotification(msg, settings.notificationDuration);
     }
 
     private void ForceUpdateWhisperParams()
@@ -171,17 +266,20 @@ public class LiveTranslationManager : MonoBehaviour
     {
         if (_stream != null)
         {
-            _stream.OnSegmentFinished -= OnSegmentFinished;
+            _stream.OnSegmentUpdated -= OnSegmentUpdated;
             audioBridge.SetChunkCallback(null);
         }
 
         var freq = AudioSettings.outputSampleRate;
         _stream = await whisperManager.CreateStream(freq, 1);
-        _stream.OnSegmentFinished += OnSegmentFinished;
+        _stream.OnSegmentUpdated += OnSegmentUpdated;
         _stream.StartStream();
 
         audioBridge.SetChunkCallback(chunk => _stream.AddToStream(chunk));
-        audioBridge.ResetPosition();
+
+        //  モードに応じてストリーミング状態を復元
+        bool streaming = EffectiveMode == TranslationMode.Auto || _pttHeld;
+        audioBridge.SetStreamingEnabled(streaming);
     }
 
     void OnDisable() => CleanupAll();
@@ -192,7 +290,7 @@ public class LiveTranslationManager : MonoBehaviour
     {
         if (_stream != null)
         {
-            _stream.OnSegmentFinished -= OnSegmentFinished;
+            _stream.OnSegmentUpdated -= OnSegmentUpdated;
             _stream = null;
         }
 
@@ -216,7 +314,7 @@ public class LiveTranslationManager : MonoBehaviour
         Debug.Log("[LiveTranslation] パイプライン開始");
     }
 
-    private void OnSegmentFinished(WhisperResult segment)
+    private void OnSegmentUpdated(WhisperResult segment)
     {
         if (segment == null) return;
         string text = segment.Result?.Trim();
@@ -263,5 +361,4 @@ public class LiveTranslationManager : MonoBehaviour
         }
         return true;
     }
-
 }

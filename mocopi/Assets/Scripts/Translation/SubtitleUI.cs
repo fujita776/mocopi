@@ -37,6 +37,9 @@ public class SubtitleUI : MonoBehaviour
         if (backgroundPanel != null)
         {
             _backgroundBaseAlpha = backgroundPanel.color.a;
+            //  起動時に背景Imageを描画OFF（黒矩形が一瞬出るのを防ぐ）
+            //  GameObject自体は触らない（このコンポーネントが止まらないように）
+            backgroundPanel.enabled = false;
         }
 
         _currentAlpha = 0f;
@@ -64,6 +67,17 @@ public class SubtitleUI : MonoBehaviour
                 _autoHide = false;
             }
         }
+
+        //  完全に非表示になったら背景Imageの描画を無効化（黒乗算矩形を消す）
+        //  Image.enabled だけトグル（GameObjectのSetActiveは触らない: SubtitleUI自身が止まるため）
+        if (backgroundPanel != null)
+        {
+            bool shouldBeVisible = _currentAlpha > 0.001f || _targetAlpha > 0.001f;
+            if (backgroundPanel.enabled != shouldBeVisible)
+            {
+                backgroundPanel.enabled = shouldBeVisible;
+            }
+        }
     }
 
     public void ShowSubtitle(string text)
@@ -81,6 +95,19 @@ public class SubtitleUI : MonoBehaviour
         subtitleText.text = processingIndicator;
         _targetAlpha = 1f;
         _autoHide = false;
+    }
+
+    /// <summary>
+    /// 短時間の通知表示（F1/F2切替時やPTT ON/OFFなど）
+    /// </summary>
+    public void ShowNotification(string text, float duration)
+    {
+        if (string.IsNullOrWhiteSpace(text)) return;
+
+        subtitleText.text = text;
+        _targetAlpha = 1f;
+        _displayTimer = duration;
+        _autoHide = true;
     }
 
     public void HideSubtitle()

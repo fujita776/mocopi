@@ -45,6 +45,8 @@ public class LiveTranslationSetup
         SetField(whisperManager, "isModelPathInStreamingAssets", settings.isModelPathInStreamingAssets);
         SetField(whisperManager, "useGpu", settings.useGpu);
         SetField(whisperManager, "flashAttention", settings.flashAttention);
+        //  LiveTranslationManagerが制御するため自動ロードは無効化
+        SetField(whisperManager, "initOnAwake", false);
 
         //  publicフィールドはSettingsから直接
         whisperManager.noContext = settings.noContext;
@@ -54,6 +56,7 @@ public class LiveTranslationSetup
         whisperManager.keepSec = settings.keepSec;
         whisperManager.lengthSec = settings.lengthSec;
         whisperManager.updatePrompt = settings.updatePrompt;
+        whisperManager.initialPrompt = settings.initialPrompt;
 
         //  AudioBridge設定
         SetField(audioBridge, "chunkIntervalSeconds", settings.chunkIntervalSeconds);

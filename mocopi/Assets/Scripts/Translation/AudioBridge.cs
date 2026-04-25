@@ -17,11 +17,27 @@ public class AudioBridge : MonoBehaviour
     private float _timer;
     private System.Action<AudioChunk> _onChunkReady;
     private bool _ready;
+    private bool _streamingEnabled = true;
 
     public void SetChunkCallback(System.Action<AudioChunk> callback)
     {
         _onChunkReady = callback;
     }
+
+    /// <summary>
+    /// ストリーミングON/OFF。OFF中は音声データをWhisperに流さない。
+    /// ONに切り替えた時点でMicrophoneの現在位置にリセットし、古い音声は破棄する。
+    /// </summary>
+    public void SetStreamingEnabled(bool enabled)
+    {
+        if (enabled && !_streamingEnabled)
+        {
+            ResetPosition();
+        }
+        _streamingEnabled = enabled;
+    }
+
+    public bool StreamingEnabled => _streamingEnabled;
 
     /// <summary>
     /// uLipSyncMicrophoneが使っているマイクデバイスとAudioClipを自動検出
@@ -86,6 +102,14 @@ public class AudioBridge : MonoBehaviour
         if (_onChunkReady == null) return;
         if (_micClip == null || string.IsNullOrEmpty(_micDeviceName)) return;
         if (!Microphone.IsRecording(_micDeviceName)) return;
+
+        //  ストリーミングOFF中でも読み取り位置は追随させる（次回ONに切り替えた時に古いデータを読まないため）
+        if (!_streamingEnabled)
+        {
+            _lastReadPos = Microphone.GetPosition(_micDeviceName);
+            _timer = 0f;
+            return;
+        }
 
         _timer += Time.deltaTime;
         if (_timer < chunkIntervalSeconds) return;
